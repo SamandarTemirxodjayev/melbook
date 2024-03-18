@@ -2,7 +2,7 @@ const {v1: uuidv4} = require("uuid");
 const path = require("path");
 const multer = require("multer");
 const Files = require("./Files");
-const domainName = "81.95.236.109:3001";
+const domainName = "cdn.mel-book.uz";
 
 exports.index = async (req, res) => {
 	res.json({message: "Storage For Files", version: "1.0.0"});
@@ -40,7 +40,7 @@ exports.upload = async (req, res) => {
 				path.extname(req.file.filename),
 			); // Get the newly generated filename
 
-			const fileUrl = `http://${domainName}/${fileName}`;
+			const fileUrl = `https://${domainName}/${fileName}`;
 
 			const files = new Files({
 				fileName,
