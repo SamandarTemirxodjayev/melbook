@@ -4,14 +4,27 @@ const toast = useToast();
 let banners = ref([]);
 let isOpen = ref(false);
 let isLoading = ref(true);
+let categories = ref([]);
+
+let name = ref("");
+let description = ref("");
 let photo_url = ref(null);
+let author = ref("");
+let category = ref("");
+let price = ref(null);
+let audioBook = ref(null);
+let bookFile = ref(null);
 
 onMounted(async () => {
   try {
-    const data = await $fetch(BASE_URL + "/banners", {
+    const data = await $fetch(BASE_URL + "/books", {
       method: "GET",
     });
     banners.value = data.data;
+    const categoriesData = await $fetch(BASE_URL + "/categories", {
+      method: "GET",
+    });
+    categories.value = categoriesData.data;
     isLoading.value = false;
   } catch (error) {
     if (error.response && error.response.status === 401) {
@@ -55,7 +68,7 @@ const items = (row) => [
 const deleteBanner = async (id) => {
   isLoading.value = true;
   try {
-    const data = await $fetch(BASE_URL + "/banners/" + id, {
+    const data = await $fetch(BASE_URL + "/books/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -64,7 +77,7 @@ const deleteBanner = async (id) => {
     });
     if (data.status === 200) {
       toast.add({ title: data.message });
-      const res = await $fetch(BASE_URL + "/banners", {
+      const res = await $fetch(BASE_URL + "/books", {
         method: "GET",
       });
       banners.value = res.data;
@@ -80,33 +93,64 @@ const deleteBanner = async (id) => {
   }
   isLoading.value = false;
 };
-function handleFileChange(event) {
+function bookPhotoChange(event) {
   if (event.target.files.length > 0) {
     photo_url.value = event.target.files[0];
+  }
+}
+function bookAudioFileChange(event) {
+  if (event.target.files.length > 0) {
+    audioBook.value = event.target.files[0];
+  }
+}
+function handleFileChange(event) {
+  if (event.target.files.length > 0) {
+    bookFile.value = event.target.files[0];
   }
 }
 const addBanner = async () => {
   isLoading.value = true;
   try {
-    const formdata = new FormData();
+    let formdata = new FormData();
     formdata.append("file", photo_url.value);
-    const { data } = await $fetch(CDN_URL + "/upload", {
+    const photoUrlRes = await $fetch(CDN_URL + "/upload", {
       method: "POST",
       body: formdata,
     });
-    const fetchBanner = await $fetch(BASE_URL + "/banners", {
+
+    formdata = new FormData();
+    formdata.append("file", audioBook.value);
+    const audioBookRes = await $fetch(CDN_URL + "/upload", {
+      method: "POST",
+      body: formdata,
+    });
+
+    formdata = new FormData();
+    formdata.append("file", bookFile.value);
+    const fileBookRes = await $fetch(CDN_URL + "/upload", {
+      method: "POST",
+      body: formdata,
+    });
+    const fetchBanner = await $fetch(BASE_URL + "/books", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify({
-        photo_url: data.fileUrl,
+        photo_url: photoUrlRes.data.fileUrl,
+        book_audio_url: audioBookRes.data.fileUrl,
+        book_url: fileBookRes.data.fileUrl,
+        name: name.value,
+        description: description.value,
+        author: author.value,
+        category: category.value,
+        price: price.value,
       }),
     });
     isOpen.value = false;
     toast.add({ title: fetchBanner.message });
-    const res = await $fetch(BASE_URL + "/banners", {
+    const res = await $fetch(BASE_URL + "/books", {
       method: "GET",
     });
     photo_url.value = null;
@@ -133,10 +177,12 @@ defineShortcuts({
 
 <template>
   <div>
-    <div class="text-2xl font-bold">Bannerlar</div>
-    <div class="shadow-2xl border border-gray-500 items-center my-4">
+    <div class="text-2xl font-bold">Kitoblar</div>
+    <div
+      class="shadow-2xl border border-gray-300 dark:border-gray-500 items-center my-4"
+    >
       <div class="flex p-4 justify-end">
-        <UButton size="lg" @click="isOpen = true">Banner Qo'shish</UButton>
+        <UButton size="lg" @click="isOpen = true">Kitob Qo'shish</UButton>
       </div>
     </div>
     <UTable
@@ -154,7 +200,7 @@ defineShortcuts({
       }"
     >
       <template #photo_url-data="{ row }">
-        <img :src="row.photo_url" alt="" />
+        <img :src="row.photo_url" alt="" class="max-w-[100px]" />
       </template>
       <template #createdAt-data="{ row }">
         {{ dateFormat(row.createdAt) }}
@@ -174,7 +220,7 @@ defineShortcuts({
       <template #empty-state>
         <div class="flex flex-col items-center justify-center py-6 gap-3">
           <span class="italic text-sm">Ma'lumot Mavjud Emas</span>
-          <UButton label="Banner Qo'shish" @click="isOpen = true" />
+          <UButton label="Kitob Qo'shish" @click="isOpen = true" />
         </div>
       </template>
     </UTable>
@@ -190,7 +236,7 @@ defineShortcuts({
             <h3
               class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
             >
-              Banner Qo'shish
+              Kitob Qo'shish
             </h3>
             <UButton
               color="gray"
@@ -203,13 +249,36 @@ defineShortcuts({
         </template>
 
         <UForm @submit="addBanner">
-          <UFormGroup
-            class="my-[2%]"
-            label="Banner Uchun Rasm Tanglang"
-            name="photo"
-            size="lg"
-          >
+          <UFormGroup class="my-[2%]" label="Kitob Nomi" size="lg">
+            <UInput type="text" size="lg" v-model="name" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Rasmi" size="lg">
+            <UInput type="file" size="lg" @change="bookPhotoChange" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Haqida" name="photo">
+            <UTextarea type="text" size="lg" v-model="description" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Muallifi" name="photo">
+            <UInput type="text" size="lg" v-model="author" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Kategoriyasi" name="photo">
+            <USelect
+              type="text"
+              size="lg"
+              :options="categories"
+              option-attribute="name"
+              value-attribute="_id"
+              v-model="category"
+            />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Narxi" name="photo">
+            <UInput type="number" size="lg" v-model="price" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob PDF fayli" name="photo">
             <UInput type="file" size="lg" @change="handleFileChange" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob audio fayli" name="photo">
+            <UInput type="file" size="lg" @change="bookAudioFileChange" />
           </UFormGroup>
           <UFormGroup class="my-[2%]" name="submit" size="xl">
             <UButton

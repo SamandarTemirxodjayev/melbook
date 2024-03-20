@@ -15,7 +15,6 @@ const bookSchema = new Schema({
 	},
 	author: {
 		type: String,
-		required: true,
 	},
 	price: {
 		type: Number,
@@ -28,6 +27,7 @@ const bookSchema = new Schema({
 	},
 	book_url: {
 		type: String,
+		required: true,
 	},
 	book_audio_url: {
 		type: String,

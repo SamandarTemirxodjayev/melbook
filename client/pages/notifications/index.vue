@@ -1,37 +1,51 @@
+import { content } from '../../.nuxt/types/tailwind.config';
 <script setup>
 const toast = useToast();
 
-let categories = ref([]);
+let banners = ref([]);
 let isOpen = ref(false);
+let isOpenEdit = ref(false);
 let isLoading = ref(true);
-let categoryText = ref("");
+let photo_url = ref(null);
+let title = ref("");
+let content = ref("");
 let editedItem = ref(null);
-let isEditOpen = ref(false);
 
 onMounted(async () => {
   try {
-    const data = await $fetch(BASE_URL + "/categories", {
+    const data = await $fetch(BASE_URL + "/notifications", {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
-    categories.value = data.data;
+    banners.value = data.data;
     isLoading.value = false;
   } catch (error) {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
       navigateTo("/exit");
     }
-    return console.log(error);
+    console.log(error);
   }
 });
-
 const columns = [
   {
-    key: "_id",
-    label: "ID",
+    key: "photo_url",
+    label: "Rasm",
   },
   {
-    key: "name",
-    label: "Nomi",
+    key: "title",
+    label: "Sarlavha",
+  },
+  {
+    key: "content",
+    label: "Matn",
+  },
+  {
+    key: "readBy",
+    label: "Ko'rishlar Soni",
   },
   {
     key: "createdAt",
@@ -49,21 +63,27 @@ const columns = [
 const items = (row) => [
   [
     {
-      label: "Tahrirlash",
-      icon: "i-heroicons-pencil-square-20-solid",
-      click: () => editCategory(row),
-    },
-    {
       label: "O'chirish",
       icon: "i-heroicons-trash-20-solid",
-      click: () => deleteCategory(row._id),
+      click: () => deleteBanner(row._id),
+    },
+    {
+      label: "Tahrirlash",
+      icon: "i-heroicons-pencil-square-20-solid",
+      click: () => editBanner(row),
     },
   ],
 ];
-const deleteCategory = async (id) => {
+const editBanner = (row) => {
+  isOpenEdit.value = true;
+  editedItem.value = row._id;
+  title.value = row.title;
+  content.value = row.content;
+};
+const deleteBanner = async (id) => {
   isLoading.value = true;
   try {
-    const data = await $fetch(BASE_URL + "/categories/" + id, {
+    const data = await $fetch(BASE_URL + "/banners/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -72,10 +92,10 @@ const deleteCategory = async (id) => {
     });
     if (data.status === 200) {
       toast.add({ title: data.message });
-      const res = await $fetch(BASE_URL + "/categories", {
+      const res = await $fetch(BASE_URL + "/notifications", {
         method: "GET",
       });
-      categories.value = res.data;
+      banners.value = res.data;
     } else {
       toast.add({ title: data.message });
     }
@@ -88,26 +108,43 @@ const deleteCategory = async (id) => {
   }
   isLoading.value = false;
 };
-const addCategory = async () => {
+function handleFileChange(event) {
+  if (event.target.files.length > 0) {
+    photo_url.value = event.target.files[0];
+  }
+}
+const addBanner = async () => {
   isLoading.value = true;
   try {
-    const fetchCategory = await $fetch(BASE_URL + "/categories", {
+    const formdata = new FormData();
+    formdata.append("file", photo_url.value);
+    const { data } = await $fetch(CDN_URL + "/upload", {
+      method: "POST",
+      body: formdata,
+    });
+    const fetchBanner = await $fetch(BASE_URL + "/notifications", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify({
-        name: categoryText.value,
+        photo_url: data.fileUrl,
+        title: title.value,
+        content: content.value,
       }),
     });
-    toast.add({ title: fetchCategory.message });
-    const res = await $fetch(BASE_URL + "/categories", {
-      method: "GET",
-    });
     isOpen.value = false;
-    categoryText.value = "";
-    categories.value = res.data;
+    toast.add({ title: fetchBanner.message });
+    const res = await $fetch(BASE_URL + "/notifications", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    photo_url.value = null;
+    banners.value = res.data;
   } catch (error) {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
@@ -117,38 +154,33 @@ const addCategory = async () => {
   }
   isLoading.value = false;
 };
-const editCategory = (row) => {
-  editedItem.value = JSON.parse(JSON.stringify(row));
-  isEditOpen.value = true;
-};
-const handleEditCategory = async () => {
+const editBannerHandler = async () => {
   isLoading.value = true;
   try {
-    const fetchCategory = await $fetch(
-      BASE_URL + "/categories/" + editedItem.value._id,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          name: editedItem.value.name,
-        }),
-      }
-    );
-    isEditOpen.value = false;
-    toast.add({ title: fetchCategory.message });
-    const res = await $fetch(BASE_URL + "/categories", {
-      method: "GET",
+    const data = await $fetch(BASE_URL + "/notifications/" + editedItem.value, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        title: title.value,
+        content: content.value,
+      }),
     });
-    editedItem.value = null;
-    categories.value = res.data;
+    toast.add({ title: data.message });
+    const fetchNotifications = await $fetch(BASE_URL + "/notifications", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    banners.value = fetchNotifications.data;
+    title.value = "";
+    content.value = "";
+    isOpenEdit.value = false;
   } catch (error) {
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem("token");
-      navigateTo("/exit");
-    }
     console.log(error);
   }
   isLoading.value = false;
@@ -166,10 +198,10 @@ defineShortcuts({
 
 <template>
   <div>
-    <div class="text-2xl font-bold">Kategoriyalar</div>
+    <div class="text-2xl font-bold">Eslatmalar</div>
     <div class="shadow-2xl border border-gray-500 items-center my-4">
       <div class="flex p-4 justify-end">
-        <UButton size="lg" @click="isOpen = true">Kategoriya Qo'shish</UButton>
+        <UButton size="lg" @click="isOpen = true">Eslatma Qo'shish</UButton>
       </div>
     </div>
     <UTable
@@ -180,14 +212,24 @@ defineShortcuts({
       }"
       :progress="{ color: 'primary', animation: 'carousel' }"
       :columns="columns"
-      :rows="categories"
+      :rows="banners"
       :empty-state="{
         icon: 'i-heroicons-circle-stack-20-solid',
-        label: 'Bannerlar Mavjud Emas',
+        label: 'Eslatma Mavjud Emas',
       }"
     >
       <template #photo_url-data="{ row }">
         <img :src="row.photo_url" alt="" />
+      </template>
+
+      <template #title-data="{ row }">
+        <div class="whitespace-pre-wrap">{{ row.title }}</div>
+      </template>
+      <template #content-data="{ row }">
+        <div class="whitespace-pre-wrap">{{ row.content }}</div>
+      </template>
+      <template #readBy-data="{ row }">
+        <div>{{ row.readBy.length }}</div>
       </template>
       <template #createdAt-data="{ row }">
         {{ dateFormat(row.createdAt) }}
@@ -207,57 +249,10 @@ defineShortcuts({
       <template #empty-state>
         <div class="flex flex-col items-center justify-center py-6 gap-3">
           <span class="italic text-sm">Ma'lumot Mavjud Emas</span>
-          <UButton label="Kategoriya Qo'shish" @click="isOpen = true" />
+          <UButton label="Eslatma Qo'shish" @click="isOpen = true" />
         </div>
       </template>
     </UTable>
-
-    <UModal v-model="isEditOpen" prevent-close>
-      <UCard
-        :ui="{
-          ring: '',
-          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-        }"
-      >
-        <template #header>
-          <div class="flex items-center justify-between">
-            <h3
-              class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-            >
-              Kategoriyani Tahrirlash
-            </h3>
-            <UButton
-              color="gray"
-              variant="ghost"
-              icon="i-heroicons-x-mark-20-solid"
-              class="-my-1"
-              @click="isEditOpen = false"
-            />
-          </div>
-        </template>
-
-        <UForm @submit="handleEditCategory">
-          <UFormGroup
-            class="my-[2%]"
-            label="Kategoriya Uchun Nom Kiriting"
-            name="photo"
-            size="lg"
-          >
-            <UInput type="text" size="lg" v-model="editedItem.name" />
-          </UFormGroup>
-          <UFormGroup class="my-[2%]" name="submit" size="lg">
-            <UButton
-              :loading="isLoading"
-              type="submit"
-              color="primary"
-              size="lg"
-              block
-              >Tasdiqlash</UButton
-            >
-          </UFormGroup>
-        </UForm>
-      </UCard>
-    </UModal>
     <UModal v-model="isOpen" prevent-close>
       <UCard
         :ui="{
@@ -270,7 +265,7 @@ defineShortcuts({
             <h3
               class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
             >
-              Kategoriya Qo'shish
+              Eslatma Qo'shish
             </h3>
             <UButton
               color="gray"
@@ -282,21 +277,92 @@ defineShortcuts({
           </div>
         </template>
 
-        <UForm @submit="addCategory">
+        <UForm @submit="addBanner">
           <UFormGroup
             class="my-[2%]"
-            label="Kategoriya Uchun Nom Kiriting"
+            label="Eslatma Uchun Rasm Tanglang"
             name="photo"
             size="lg"
           >
-            <UInput type="text" size="lg" v-model="categoryText" />
+            <UInput type="file" size="lg" @change="handleFileChange" />
           </UFormGroup>
-          <UFormGroup class="my-[2%]" name="submit" size="lg">
+          <UFormGroup
+            class="my-[2%]"
+            label="Eslatma Uchun Sarlavha Yozing"
+            name="photo"
+            size="lg"
+          >
+            <UInput type="text" size="lg" v-model="title" />
+          </UFormGroup>
+          <UFormGroup
+            class="my-[2%]"
+            label="Eslatma Uchun Matn Yozing"
+            name="photo"
+            size="lg"
+          >
+            <UTextarea type="text" size="xl" v-model="content" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" name="submit" size="xl">
             <UButton
               :loading="isLoading"
               type="submit"
               color="primary"
-              size="lg"
+              size="xl"
+              block
+              >Tasdiqlash</UButton
+            >
+          </UFormGroup>
+        </UForm>
+      </UCard>
+    </UModal>
+
+    <UModal v-model="isOpenEdit" prevent-close>
+      <UCard
+        :ui="{
+          ring: '',
+          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+        }"
+      >
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3
+              class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+            >
+              Eslatmani Tahrirlash
+            </h3>
+            <UButton
+              color="gray"
+              variant="ghost"
+              icon="i-heroicons-x-mark-20-solid"
+              class="-my-1"
+              @click="isOpenEdit = false"
+            />
+          </div>
+        </template>
+
+        <UForm @submit="editBannerHandler">
+          <UFormGroup
+            class="my-[2%]"
+            label="Eslatma Uchun Sarlavha"
+            name="photo"
+            size="lg"
+          >
+            <UInput type="text" size="lg" v-model="title" />
+          </UFormGroup>
+          <UFormGroup
+            class="my-[2%]"
+            label="Eslatma Uchun Matn"
+            name="photo"
+            size="lg"
+          >
+            <UTextarea type="text" size="xl" v-model="content" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" name="submit" size="xl">
+            <UButton
+              :loading="isLoading"
+              type="submit"
+              color="primary"
+              size="xl"
               block
               >Tasdiqlash</UButton
             >

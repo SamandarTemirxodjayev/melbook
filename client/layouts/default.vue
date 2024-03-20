@@ -38,6 +38,16 @@ const links = [
     to: "/categories",
   },
   {
+    label: "Kitoblar",
+    icon: "i-heroicons-book-open",
+    to: "/books",
+  },
+  {
+    label: "Eslatmalar",
+    icon: "i-heroicons-bell",
+    to: "/notifications",
+  },
+  {
     label: "Chiqish",
     icon: "i-heroicons-chevron-double-left",
     to: "/exit",

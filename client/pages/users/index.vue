@@ -21,9 +21,11 @@ onMounted(async () => {
     });
     users.value = data.data;
     isLoading.value = false;
-    toast.add({ title: data.message });
   } catch (error) {
-    console.log(error);
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      navigateTo("/exit");
+    }
   }
 });
 
@@ -72,23 +74,28 @@ const items = (row) => [
 ];
 const deleteUser = async (id) => {
   isLoading.value = true;
-  const data = await $fetch(BASE_URL + "/user/" + id, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
-  if (data.status === 200) {
-    toast.add({ title: data.message });
-    const res = await $fetch(BASE_URL + "/user/get-all", {
-      method: "GET",
+  try {
+    const data = await $fetch(BASE_URL + "/user/" + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
-    users.value = res.data;
-
-    toast.add({ title: "Ma'lumotlar Yuklandi" });
-  } else {
-    toast.add({ title: data.message });
+    if (data.status === 200) {
+      toast.add({ title: data.message });
+      const res = await $fetch(BASE_URL + "/user/get-all", {
+        method: "GET",
+      });
+      users.value = res.data;
+    } else {
+      toast.add({ title: data.message });
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      navigateTo("/exit");
+    }
   }
   isLoading.value = false;
 };
