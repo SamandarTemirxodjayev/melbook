@@ -7,5 +7,7 @@ const router = Router();
 router.get("/", controller.getAllBooks);
 router.get("/:id", controller.getBookById);
 router.post("/", adminMiddleware, controller.createBook);
+router.delete("/:id", adminMiddleware, controller.deleteBook);
+router.put("/:id", adminMiddleware, controller.updateBook);
 
 module.exports = router;

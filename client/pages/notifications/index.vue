@@ -83,7 +83,7 @@ const editBanner = (row) => {
 const deleteBanner = async (id) => {
   isLoading.value = true;
   try {
-    const data = await $fetch(BASE_URL + "/banners/" + id, {
+    const data = await $fetch(BASE_URL + "/notifications/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -94,6 +94,10 @@ const deleteBanner = async (id) => {
       toast.add({ title: data.message });
       const res = await $fetch(BASE_URL + "/notifications", {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       banners.value = res.data;
     } else {
@@ -106,6 +110,7 @@ const deleteBanner = async (id) => {
     }
     console.log(error);
   }
+
   isLoading.value = false;
 };
 function handleFileChange(event) {
@@ -144,6 +149,8 @@ const addBanner = async () => {
       },
     });
     photo_url.value = null;
+    title.value = "";
+    content.value = "";
     banners.value = res.data;
   } catch (error) {
     if (error.response && error.response.status === 401) {

@@ -68,7 +68,7 @@ exports.register = async (req, res) => {
 			},
 			process.env.ACCESS_TOKEN_SECRET,
 			{
-				expiresIn: "12h",
+				expiresIn: "30d",
 			},
 		);
 		return res.status(201).json({
@@ -78,7 +78,7 @@ exports.register = async (req, res) => {
 				user,
 				token,
 				token_expiration: new Date(
-					Date.now() + 12 * 60 * 60 * 1000,
+					Date.now() + 12 * 60 * 60 * 1000 * 30,
 				).toISOString(),
 				token_type: "Bearer",
 			},
@@ -127,7 +127,7 @@ exports.login = async (req, res) => {
 			},
 			process.env.ACCESS_TOKEN_SECRET,
 			{
-				expiresIn: "12h",
+				expiresIn: "30d",
 			},
 		);
 		return res.status(200).json({

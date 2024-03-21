@@ -23,10 +23,6 @@ onMounted(async () => {
 });
 const columns = [
   {
-    key: "_id",
-    label: "ID",
-  },
-  {
     key: "photo_url",
     label: "Rasm",
   },

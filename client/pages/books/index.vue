@@ -3,9 +3,11 @@ const toast = useToast();
 
 let banners = ref([]);
 let isOpen = ref(false);
+let isOpenEdit = ref(false);
 let isLoading = ref(true);
 let categories = ref([]);
 
+let book = ref(null);
 let name = ref("");
 let description = ref("");
 let photo_url = ref(null);
@@ -36,12 +38,28 @@ onMounted(async () => {
 });
 const columns = [
   {
-    key: "_id",
-    label: "ID",
+    key: "name",
+    label: "Nomi",
   },
   {
     key: "photo_url",
     label: "Rasm",
+  },
+  {
+    key: "description",
+    label: "Batafsil",
+  },
+  {
+    key: "author",
+    label: "Yozuvchi",
+  },
+  {
+    key: "price",
+    label: "Narxi",
+  },
+  {
+    key: "category",
+    label: "Kategoriyasi",
   },
   {
     key: "createdAt",
@@ -59,13 +77,90 @@ const columns = [
 const items = (row) => [
   [
     {
+      label: "Tahrirlash",
+      icon: "i-heroicons-pencil-square-20-solid",
+      click: () => editBook(row),
+    },
+    {
       label: "O'chirish",
       icon: "i-heroicons-trash-20-solid",
-      click: () => deleteBanner(row._id),
+      click: () => deleteBook(row._id),
+    },
+  ],
+  [
+    {
+      label: "Yuklab Olish(Kitob)",
+      icon: "i-heroicons-archive-box-arrow-down",
+      click: () => downloadBook(row.book_url, row.name),
+    },
+    {
+      label: "Yuklab Olish(Audio)",
+      icon: "i-heroicons-archive-box-arrow-down",
+      click: () => downloadBookAudio(row.book_audio_url, row.name),
     },
   ],
 ];
-const deleteBanner = async (id) => {
+const editBook = async (row) => {
+  isOpenEdit.value = true;
+  book.value = row._id;
+  name.value = row.name;
+  description.value = row.description;
+  author.value = row.author;
+  category.value = row.category._id;
+  price.value = row.price;
+};
+const handleEditBook = async () => {
+  isLoading.value = true;
+  try {
+    await $fetch(BASE_URL + `/books/${book.value}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        name: name.value,
+        description: description.value,
+        author: author.value,
+        category: category.value,
+        price: price.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const getData = await $fetch(BASE_URL + "/books", {
+      method: "GET",
+    });
+    name.value = "";
+    description.value = "";
+    author.value = "";
+    category.value = "";
+    price.value = "";
+    banners.value = getData.data;
+    isOpenEdit.value = false;
+    isLoading.value = false;
+  } catch (error) {
+    console.log(error);
+  }
+  isOpenEdit.value = false;
+};
+const downloadBook = async (bookUrl, name) => {
+  const response = await fetch(bookUrl);
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${name}.pdf`;
+  a.click();
+};
+const downloadBookAudio = async (bookAudioUrl, name) => {
+  const response = await fetch(bookAudioUrl);
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${name}.mp3`;
+  a.click();
+};
+const deleteBook = async (id) => {
   isLoading.value = true;
   try {
     const data = await $fetch(BASE_URL + "/books/" + id, {
@@ -199,8 +294,19 @@ defineShortcuts({
         label: 'Bannerlar Mavjud Emas',
       }"
     >
+      <template #description-data="{ row }">
+        <div class="whitespace-pre-line w-[300px]">{{ row.description }}</div>
+      </template>
+      <template #price-data="{ row }">
+        <div>{{ numberFormat(row.price) }} so'm</div>
+      </template>
       <template #photo_url-data="{ row }">
         <img :src="row.photo_url" alt="" class="max-w-[100px]" />
+      </template>
+      <template #category-data="{ row }">
+        <div>
+          {{ row.category.name }}
+        </div>
       </template>
       <template #createdAt-data="{ row }">
         {{ dateFormat(row.createdAt) }}
@@ -279,6 +385,67 @@ defineShortcuts({
           </UFormGroup>
           <UFormGroup class="my-[2%]" label="Kitob audio fayli" name="photo">
             <UInput type="file" size="lg" @change="bookAudioFileChange" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" name="submit" size="xl">
+            <UButton
+              :loading="isLoading"
+              type="submit"
+              color="primary"
+              size="xl"
+              block
+              >Tasdiqlash</UButton
+            >
+          </UFormGroup>
+        </UForm>
+      </UCard>
+    </UModal>
+
+    <UModal v-model="isOpenEdit" prevent-close>
+      <UCard
+        :ui="{
+          ring: '',
+          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+        }"
+      >
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3
+              class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+            >
+              Kitob Qo'shish
+            </h3>
+            <UButton
+              color="gray"
+              variant="ghost"
+              icon="i-heroicons-x-mark-20-solid"
+              class="-my-1"
+              @click="isOpenEdit = false"
+            />
+          </div>
+        </template>
+
+        <UForm @submit="handleEditBook">
+          <UFormGroup class="my-[2%]" label="Kitob Nomi" size="lg">
+            <UInput type="text" size="lg" v-model="name" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Haqida" name="photo">
+            <UTextarea type="text" size="lg" v-model="description" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Muallifi" name="photo">
+            <UInput type="text" size="lg" v-model="author" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Kategoriyasi" name="photo">
+            <USelect
+              type="text"
+              size="lg"
+              :options="categories"
+              option-attribute="name"
+              value-attribute="_id"
+              v-model="category"
+            />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Kitob Narxi" name="photo">
+            <UInput type="number" size="lg" v-model="price" />
           </UFormGroup>
           <UFormGroup class="my-[2%]" name="submit" size="xl">
             <UButton

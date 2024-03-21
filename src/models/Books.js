@@ -22,7 +22,7 @@ const bookSchema = new Schema({
 	},
 	category: {
 		type: Types.ObjectId,
-		ref: "category",
+		ref: "categories",
 		required: true,
 	},
 	book_url: {
