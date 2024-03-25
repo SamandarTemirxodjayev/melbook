@@ -6,7 +6,7 @@ const SERVICE_ID = process.env.CLICK_SERVICE_ID;
 const MERCHANT_ID = process.env.CLICK_MERCHANT_ID;
 const SECRET_KEY = process.env.CLICK_SECRET_KEY;
 const MERCHANT_USER_ID = process.env.CLICK_MERCHANT_USER_ID;
-const timestamp = Math.floor(Date.now() / 1000);
+const timestamp = Math.floor(Date.now() / 1000).toString();
 const digest = crypto
 	.createHash("sha1")
 	.update(timestamp + SECRET_KEY)
