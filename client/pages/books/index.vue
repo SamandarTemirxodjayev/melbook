@@ -14,13 +14,16 @@ let photo_url = ref(null);
 let author = ref("");
 let category = ref("");
 let price = ref(null);
-let audioBook = ref(null);
 let bookFile = ref(null);
 
 onMounted(async () => {
   try {
     const data = await $fetch(BASE_URL + "/books", {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     banners.value = data.data;
     const categoriesData = await $fetch(BASE_URL + "/categories", {
@@ -128,6 +131,10 @@ const handleEditBook = async () => {
     });
     const getData = await $fetch(BASE_URL + "/books", {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     name.value = "";
     description.value = "";
@@ -174,6 +181,10 @@ const deleteBook = async (id) => {
       toast.add({ title: data.message });
       const res = await $fetch(BASE_URL + "/books", {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       banners.value = res.data;
     } else {
@@ -193,11 +204,6 @@ function bookPhotoChange(event) {
     photo_url.value = event.target.files[0];
   }
 }
-function bookAudioFileChange(event) {
-  if (event.target.files.length > 0) {
-    audioBook.value = event.target.files[0];
-  }
-}
 function handleFileChange(event) {
   if (event.target.files.length > 0) {
     bookFile.value = event.target.files[0];
@@ -209,13 +215,6 @@ const addBanner = async () => {
     let formdata = new FormData();
     formdata.append("file", photo_url.value);
     const photoUrlRes = await $fetch(CDN_URL + "/upload", {
-      method: "POST",
-      body: formdata,
-    });
-
-    formdata = new FormData();
-    formdata.append("file", audioBook.value);
-    const audioBookRes = await $fetch(CDN_URL + "/upload", {
       method: "POST",
       body: formdata,
     });
@@ -234,7 +233,6 @@ const addBanner = async () => {
       },
       body: JSON.stringify({
         photo_url: photoUrlRes.data.fileUrl,
-        book_audio_url: audioBookRes.data.fileUrl,
         book_url: fileBookRes.data.fileUrl,
         name: name.value,
         description: description.value,
@@ -382,9 +380,6 @@ defineShortcuts({
           </UFormGroup>
           <UFormGroup class="my-[2%]" label="Kitob PDF fayli" name="photo">
             <UInput type="file" size="lg" @change="handleFileChange" />
-          </UFormGroup>
-          <UFormGroup class="my-[2%]" label="Kitob audio fayli" name="photo">
-            <UInput type="file" size="lg" @change="bookAudioFileChange" />
           </UFormGroup>
           <UFormGroup class="my-[2%]" name="submit" size="xl">
             <UButton

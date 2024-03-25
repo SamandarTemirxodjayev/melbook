@@ -43,6 +43,11 @@ const links = [
     to: "/books",
   },
   {
+    label: "Audiolar",
+    icon: "i-heroicons-speaker-wave",
+    to: "/audios",
+  },
+  {
     label: "Eslatmalar",
     icon: "i-heroicons-bell",
     to: "/notifications",

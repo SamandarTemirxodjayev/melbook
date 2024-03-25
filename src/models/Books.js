@@ -29,9 +29,12 @@ const bookSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	book_audio_url: {
-		type: String,
-	},
+	audios: [
+		{
+			type: Types.ObjectId,
+			ref: "audio",
+		},
+	],
 });
 
 bookSchema.set("timestamps", true);

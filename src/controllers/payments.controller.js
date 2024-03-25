@@ -1,99 +1,221 @@
-const https = require("https");
-const crypto = require("crypto");
+const {getToken} = require("../../utils/authTokenPayment");
+const {
+	createClickPayment,
+	checkClickPayment,
+} = require("../../utils/clickPayment");
+const Books = require("../models/Books");
 const Payments = require("../models/Payments");
+const axios = require("axios");
+const https = require("https");
 require("dotenv").config();
 
-const SERVICE_ID = process.env.CLICK_SERVICE_ID;
-const MERCHANT_ID = process.env.CLICK_MERCHANT_ID;
-const SECRET_KEY = process.env.CLICK_SECRET_KEY;
-const MERCHANT_USER_ID = process.env.CLICK_MERCHANT_USER_ID;
-
-const timestamp = Math.floor(Date.now() / 1000);
-const digest = crypto
-	.createHash("sha1")
-	.update(`${timestamp}${SECRET_KEY}`)
-	.digest("hex");
-const authHeader = `${MERCHANT_USER_ID}:${digest}:${timestamp}`;
-
-exports.createClickPayment = async (req, res) => {
+exports.createPaymentByCardNumber = async (req, res) => {
+	const {card_number, card_expirence, book_id} = req.body;
+	if (!card_number)
+		return res.status(400).json({error: "Card number is required."});
+	if (!card_expirence)
+		return res.status(400).json({error: "Card expirence is required."});
+	if (!book_id) return res.status(400).json({error: "Book id is required."});
 	try {
-		const {amount, phone_number} = req.body;
-		if (!amount) return res.status(400).json({error: "amount is required"});
-		if (!phone_number)
-			return res.status(400).json({error: "phone_number is required"});
-
-		const newPayment = await Payments.create({
+		const book = await Books.findById(book_id);
+		if (!book)
+			return res.status(404).json({
+				message: "Book not found",
+			});
+		const payment = await Payments.create({
 			user_id: req.user._id,
-			book_id: req.body.book_id,
-			phone_number: req.body.phone_number,
-			date: req.body.date,
-			type: "click",
+			book_id,
+			type: "by_card_number",
 		});
-		await newPayment.save();
-
-		const postData = JSON.stringify({
-			service_id: SERVICE_ID,
-			amount,
-			phone_number,
-			merchant_trans_id: newPayment._id,
+		const {token} = await getToken();
+		const agent = new https.Agent({
+			rejectUnauthorized: false,
 		});
 
-		const options = {
-			hostname: "api.click.uz",
-			port: 443,
-			path: "/v2/merchant/invoice/create",
-			method: "POST",
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-				Auth: authHeader,
+		// Fetch a new token if none is stored or if it's expired
+		const response = await axios.post(
+			process.env.MULTICARD_CONNECTION_API + "/payment",
+			{
+				card: {
+					pan: card_number,
+					expiry: card_expirence,
+				},
+				amount: book.price * 100,
+				store_id: process.env.MULTICARD_STORE_ID,
+				invoice_id: payment._id,
+				details: "",
 			},
-		};
-
-		const request = https.request(options, (response) => {
-			let data = ""; // Initialize a variable to hold the chunks of data
-			response.setEncoding("utf8");
-			response.on("data", (chunk) => {
-				data += chunk; // Accumulate the chunks of data
-			});
-			response.on("end", () => {
-				console.log("BODY: " + data);
-				// Now that all data has been received, send the response here
-				try {
-					const parsedData = JSON.parse(data);
-					res.status(200).json({
-						message: "To'lov yaratildi",
-						status: 200,
-						data: {
-							chunk: parsedData,
-							payment: newPayment,
-						},
-					});
-				} catch (error) {
-					console.error(`Error parsing JSON response: ${error}`);
-					return res.status(500).json({message: "Something went wrong"});
-				}
-			});
+			{
+				httpsAgent: agent,
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			},
+		);
+		payment.payment_uuid = response.data.data.uuid;
+		await payment.save();
+		return res.status(200).json({
+			message: "Payment created",
+			status: 200,
+			data: {
+				payment,
+				info: response.data,
+			},
 		});
-		request.on("error", (e) => {
-			console.error(`problem with request: ${e.message}`);
-			return res.status(500).json({message: "Something went wrong"});
-		});
-		request.write(postData);
-		request.end();
 	} catch (error) {
-		return res.status(500).json({error: error.message});
+		return res.status(500).json({
+			message: error.message,
+			status: 500,
+		});
 	}
 };
-
-exports.checkClickPayments = async (req, res) => {
+exports.confirmPaymentByCardNumber = async (req, res) => {
+	const {uuid} = req.params;
+	if (!uuid) return res.status(400).json({error: "Payment uuid is required."});
+	const {code} = req.body;
+	if (!code) return res.status(400).json({error: "Payment code is required."});
 	try {
-		console.log(req.body);
-		console.log(req.params);
-		console.log(req.query);
-		console.log(req.cookies);
-		return res.status(200).json({status: 200});
+		const payment = await Payments.findOne({
+			payment_uuid: uuid,
+			status: 0,
+		});
+		if (!payment)
+			return res.status(404).json({
+				message: "Payment not found",
+			});
+		const {token} = await getToken();
+		const agent = new https.Agent({
+			rejectUnauthorized: false,
+		});
+
+		const response = await axios.put(
+			process.env.MULTICARD_CONNECTION_API + "/payment/" + uuid,
+			{
+				otp: code,
+			},
+			{
+				httpsAgent: agent,
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			},
+		);
+		if (response.data.success) {
+			req.user.boughtBooks.push(payment.book_id);
+			await req.user.save();
+			payment.status = 1;
+			await payment.save();
+			return res.status(200).json({
+				message: "Payment confirmed",
+				status: 200,
+				data: {
+					payment,
+					info: response.data,
+				},
+			});
+		} else {
+			return res.status(400).json({
+				message: "Payment failed",
+				status: 400,
+				data: {
+					payment,
+					info: response.data,
+				},
+			});
+		}
 	} catch (error) {
-		return res.status(500).json({error: error.message});
+		console.log(error.request);
+		return res.status(500).json({message: error.message, status: 500});
+	}
+};
+exports.createPaymentByClick = async (req, res) => {
+	const {book_id, phone_number} = req.body;
+	if (!book_id) return res.status(400).json({error: "Book id is required."});
+	if (!phone_number)
+		return res.status(400).json({error: "Phone number is required."});
+	try {
+		const payment = await Payments.create({
+			user_id: req.user._id,
+			book_id: book_id,
+			type: "by_click",
+		});
+		const book = await Books.findById(req.body.book_id);
+		const clickRes = await createClickPayment(
+			book.price,
+			phone_number,
+			payment._id,
+		);
+		payment.payment_uuid = JSON.parse(clickRes).invoice_id;
+		await payment.save();
+		return res.status(200).json({
+			message: "Payment created",
+			status: 200,
+			data: {
+				payment,
+				info: JSON.parse(clickRes),
+			},
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({message: error.message, status: 500});
+	}
+};
+exports.checkPaymentByClick = async (req, res) => {
+	const {uuid} = req.params;
+	if (!uuid) return res.status(400).json({error: "Payment uuid is required."});
+	try {
+		const payment = await Payments.findOne({
+			payment_uuid: uuid,
+			status: 0,
+		});
+		if (!payment)
+			return res.status(404).json({
+				message: "Payment not found",
+			});
+		const clickRes = await checkClickPayment(uuid);
+		const click = JSON.parse(clickRes);
+		if (click.status == 0) {
+			return res.json({
+				message: "To'lov yaratilgan",
+				status: 200,
+				data: {
+					payment,
+					info: JSON.parse(clickRes),
+				},
+			});
+		} else if (click.status == -99) {
+			payment.deleteOne();
+			return res.json({
+				message: "To'lov Bekor Qilingan",
+				status: 200,
+				data: {
+					payment,
+					info: JSON.parse(clickRes),
+				},
+			});
+		} else if (click.status == 2) {
+			payment.status = 1;
+			await payment.save();
+			req.user.boughtBooks.push(payment.book_id);
+			await req.user.save();
+			return res.json({
+				message: "Payment confirmed",
+				status: 200,
+				data: {
+					payment,
+					info: JSON.parse(clickRes),
+				},
+			});
+		}
+		return res.status(400).json({
+			message: "Error",
+			status: 200,
+			data: {
+				payment,
+				info: JSON.parse(clickRes),
+			},
+		});
+	} catch (error) {
+		return res.status(500).json({message: error.message, status: 500});
 	}
 };

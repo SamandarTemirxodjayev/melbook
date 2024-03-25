@@ -4,8 +4,17 @@ const userMiddleware = require("../middleware/user.middleware.js");
 
 const router = Router();
 
-router.post("/click/create", userMiddleware, controller.createClickPayment);
-router.get("/click", controller.checkClickPayments);
-router.post("/click", controller.checkClickPayments);
+router.post(
+	"/card/create",
+	userMiddleware,
+	controller.createPaymentByCardNumber,
+);
+router.put(
+	"/card/:uuid",
+	userMiddleware,
+	controller.confirmPaymentByCardNumber,
+);
+router.post("/click/create", userMiddleware, controller.createPaymentByClick);
+router.put("/click/:uuid", userMiddleware, controller.checkPaymentByClick);
 
 module.exports = router;

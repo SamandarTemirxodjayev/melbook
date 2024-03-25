@@ -4,38 +4,75 @@ const {Types} = require("mongoose");
 exports.getAllBooks = async (req, res) => {
 	try {
 		const books = await Books.find().populate("category");
+		const userBoughtBookIds = req.user.boughtBooks.map((book) =>
+			book.toString(),
+		);
+
+		const booksWithBoughtFlag = await Promise.all(
+			books.map(async (book) => {
+				const bookJson = book.toJSON();
+				bookJson.bought = userBoughtBookIds.includes(book._id.toString());
+
+				if (bookJson.bought) {
+					const populatedBook = await Books.findById(book._id).populate(
+						"audios",
+					);
+					bookJson.audios = populatedBook.audios;
+				} else {
+					delete bookJson.audios;
+					delete bookJson.book_url;
+				}
+
+				return bookJson;
+			}),
+		);
+
 		return res.status(200).json({
 			message: "Kitoblar Muvaffaqiyatli Yuklandi",
 			status: 200,
-			data: books,
+			data: booksWithBoughtFlag,
 		});
 	} catch (error) {
 		return res.status(500).json({message: error.message});
 	}
 };
+
 exports.getBookById = async (req, res) => {
 	try {
-		const book = await Books.findById(req.params.id).populate("category");
+		const bookId = req.params.id;
+		const book = await Books.findById(bookId).populate("category");
+
+		if (!book) {
+			return res.status(404).json({message: "Book not found"});
+		}
+
+		let bookJson = book.toJSON();
+
+		bookJson.bought = req.user.boughtBooks.some((boughtBookId) =>
+			boughtBookId.equals(book._id),
+		);
+
+		if (bookJson.bought) {
+			const populatedBook = await Books.findById(book._id).populate("audios");
+			bookJson.audios = populatedBook.audios;
+		} else {
+			delete bookJson.audios;
+			delete bookJson.book_url;
+		}
+
 		return res.status(200).json({
 			message: "Kitob Muvaffaqiyatli Yuklandi",
 			status: 200,
-			data: book,
+			data: bookJson,
 		});
 	} catch (error) {
 		return res.status(500).json({message: error.message});
 	}
 };
+
 exports.createBook = async (req, res) => {
-	const {
-		name,
-		photo_url,
-		description,
-		author,
-		price,
-		category,
-		book_url,
-		book_audio_url,
-	} = req.body;
+	const {name, photo_url, description, author, price, category, book_url} =
+		req.body;
 	if (!name) return res.status(400).json({message: "Name is required"});
 	if (!photo_url) return res.status(400).json({message: "Photo is required"});
 	if (!description)
@@ -52,7 +89,6 @@ exports.createBook = async (req, res) => {
 			price,
 			category,
 			book_url,
-			book_audio_url,
 		});
 		return res.status(201).json({
 			message: "Kitob Muvaffaqiyatli Yaratildi",

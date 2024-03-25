@@ -15,10 +15,6 @@ const paymentSchema = new Schema({
 		ref: "books",
 		required: true,
 	},
-	phone_number: {
-		type: String,
-		required: true,
-	},
 	type: {
 		type: String,
 		required: true,
@@ -26,6 +22,10 @@ const paymentSchema = new Schema({
 	date: {
 		type: Date,
 		default: Date.now,
+	},
+	payment_uuid: {
+		type: String,
+		// required: true,
 	},
 });
 
