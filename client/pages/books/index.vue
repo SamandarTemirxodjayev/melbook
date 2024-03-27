@@ -245,6 +245,10 @@ const addBanner = async () => {
     toast.add({ title: fetchBanner.message });
     const res = await $fetch(BASE_URL + "/books", {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
     photo_url.value = null;
     banners.value = res.data;

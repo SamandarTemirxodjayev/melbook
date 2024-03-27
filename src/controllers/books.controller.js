@@ -8,12 +8,15 @@ exports.getAllBooks = async (req, res) => {
 			book.toString(),
 		);
 
+		console.log(req.user);
+
 		const booksWithBoughtFlag = await Promise.all(
 			books.map(async (book) => {
 				const bookJson = book.toJSON();
 				bookJson.bought = userBoughtBookIds.includes(book._id.toString());
 
 				if (bookJson.bought) {
+					console.log(book);
 					const populatedBook = await Books.findById(book._id).populate(
 						"audios",
 					);
