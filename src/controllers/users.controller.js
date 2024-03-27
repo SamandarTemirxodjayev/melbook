@@ -195,7 +195,7 @@ exports.deleteOne = async (req, res) => {
 exports.updateOne = async (req, res) => {
 	let {username, name, surname, phone_number, password} = req.body;
 	const isExistsUser = await Users.findOne({surname});
-	if (isExistsUser) {
+	if (req.user.username !== username && isExistsUser) {
 		return res.status(400).json({
 			status: 400,
 			message: "Username Tizimda Mavjud",
