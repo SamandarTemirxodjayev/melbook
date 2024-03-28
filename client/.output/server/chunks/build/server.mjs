@@ -3204,7 +3204,7 @@ const mr = Symbol.toStringTag, bi = n((i) => typeof i == "object" && typeof i.ap
         u.append(d2, b);
       return u;
     }
-    const { toFormData: a2 } = await import('./multipart-parser-BW0bo9Jl.mjs');
+    const { toFormData: a2 } = await import('./multipart-parser-DyYLifUb.mjs');
     return a2(this.body, o2);
   }
   async blob() {
@@ -5123,7 +5123,7 @@ const cfg0 = defineAppConfig({
 });
 const inlineConfig = {
   "nuxt": {
-    "buildId": "2e92eef1-4930-497c-bc6b-61e653f8840b"
+    "buildId": "3f1169a4-9b79-4acc-bfee-596192dc349c"
   },
   "ui": {
     "primary": "green",
@@ -5181,12 +5181,20 @@ const __nuxt_page_meta$3 = {
 };
 const _routes = [
   {
+    name: "audios",
+    path: "/audios",
+    meta: {},
+    alias: [],
+    redirect: void 0 ,
+    component: () => import('./index-Bf_vm7Oh.mjs').then((m) => m.default || m)
+  },
+  {
     name: "banners",
     path: "/banners",
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-BOKRoE8L.mjs').then((m) => m.default || m)
+    component: () => import('./index-B-o6FeQw.mjs').then((m) => m.default || m)
   },
   {
     name: "books",
@@ -5194,7 +5202,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-ZItJBpsg.mjs').then((m) => m.default || m)
+    component: () => import('./index-rer8kSw7.mjs').then((m) => m.default || m)
   },
   {
     name: "categories",
@@ -5202,7 +5210,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-Cgj8vGYq.mjs').then((m) => m.default || m)
+    component: () => import('./index-CnDPDvP0.mjs').then((m) => m.default || m)
   },
   {
     name: (__nuxt_page_meta$5 == null ? void 0 : __nuxt_page_meta$5.name) ?? "exit",
@@ -5210,7 +5218,7 @@ const _routes = [
     meta: __nuxt_page_meta$5 || {},
     alias: (__nuxt_page_meta$5 == null ? void 0 : __nuxt_page_meta$5.alias) || [],
     redirect: __nuxt_page_meta$5 == null ? void 0 : __nuxt_page_meta$5.redirect,
-    component: () => import('./exit-Dd58r84k.mjs').then((m) => m.default || m)
+    component: () => import('./exit-B5Dyujbc.mjs').then((m) => m.default || m)
   },
   {
     name: "index",
@@ -5226,7 +5234,7 @@ const _routes = [
     meta: __nuxt_page_meta$3 || {},
     alias: (__nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.alias) || [],
     redirect: __nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.redirect,
-    component: () => import('./index-ClEO9MTE.mjs').then((m) => m.default || m)
+    component: () => import('./index-C1nwIwUk.mjs').then((m) => m.default || m)
   },
   {
     name: "notifications",
@@ -5234,7 +5242,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-pDTEC5M0.mjs').then((m) => m.default || m)
+    component: () => import('./index-CyDrMZWP.mjs').then((m) => m.default || m)
   },
   {
     name: "profile",
@@ -5242,7 +5250,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-BQj0OaG2.mjs').then((m) => m.default || m)
+    component: () => import('./index-DdvSNarM.mjs').then((m) => m.default || m)
   },
   {
     name: "users",
@@ -5250,7 +5258,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-C_PT1gWW.mjs').then((m) => m.default || m)
+    component: () => import('./index-B8p9r3hi.mjs').then((m) => m.default || m)
   }
 ];
 const _wrapIf = (component, props, slots) => {
@@ -5569,7 +5577,7 @@ const revive_payload_server_afvuSAeGC9 = /* @__PURE__ */ defineNuxtPlugin({
 const LazyIcon = defineAsyncComponent(() => Promise.resolve().then(function() {
   return Icon;
 }).then((r) => r.default));
-const LazyIconCSS = defineAsyncComponent(() => import('./IconCSS-JhF8O41m.mjs').then((r) => r.default));
+const LazyIconCSS = defineAsyncComponent(() => import('./IconCSS-BUvIwUUJ.mjs').then((r) => r.default));
 const lazyGlobalComponents = [
   ["Icon", LazyIcon],
   ["IconCSS", LazyIconCSS]
@@ -8430,7 +8438,7 @@ const plugins = [
   plugin_server_jGJfoIcZXi
 ];
 const layouts = {
-  default: () => import('./default-DY9FSx-z.mjs').then((m) => m.default || m)
+  default: () => import('./default-kHYzA-y4.mjs').then((m) => m.default || m)
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -13333,5 +13341,5 @@ let entry;
 }
 const entry$1 = (ssrContext) => entry(ssrContext);
 
-export { getNuxtLinkProps as A, useAppConfig as B, resolveIconName as C, br as D, Bn as E, __nuxt_component_0$1 as F, getULinkProps as G, useState as H, useRoute as I, _export_sfc as _, __nuxt_component_0$2 as a, useToast as b, createError as c, __nuxt_component_2 as d, entry$1 as default, appConfig as e, __nuxt_component_2$1 as f, useUI as g, useInjectButtonGroup as h, twJoin as i, get as j, asyncDataDefaults as k, useNuxtApp as l, mergeConfig as m, navigateTo as n, hash as o, fetchDefaults as p, defu as q, textarea as r, select as s, twMerge as t, useHead as u, looseToNumber as v, input as w, button as x, arrow as y, __nuxt_component_1 as z };
+export { arrow as A, getNuxtLinkProps as B, useAppConfig as C, resolveIconName as D, br as E, Bn as F, __nuxt_component_0$1 as G, getULinkProps as H, useState as I, useRoute as J, _export_sfc as _, __nuxt_component_0$2 as a, appConfig as b, createError as c, __nuxt_component_2$1 as d, entry$1 as default, __nuxt_component_1 as e, useUI as f, defu as g, useInjectButtonGroup as h, twJoin as i, input as j, inputMenu as k, get as l, mergeConfig as m, useToast as n, navigateTo as o, __nuxt_component_2 as p, asyncDataDefaults as q, useNuxtApp as r, select as s, twMerge as t, useHead as u, hash as v, fetchDefaults as w, textarea as x, looseToNumber as y, button as z };
 //# sourceMappingURL=server.mjs.map
