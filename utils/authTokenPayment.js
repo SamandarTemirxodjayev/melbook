@@ -36,12 +36,7 @@ exports.getToken = async () => {
 		const ttl =
 			(new Date(response.data.expiry).getTime() - new Date().getTime()) / 1000 -
 			120;
-		await redis.set(
-			"authToken",
-			JSON.stringify(newToken),
-			"EX",
-			Math.floor(ttl),
-		);
+		await redis.set("authToken", JSON.stringify(newToken), "EX", 23 * 3600);
 
 		return newToken;
 	} catch (error) {
