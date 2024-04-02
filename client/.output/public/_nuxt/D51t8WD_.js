@@ -1,1 +1,0 @@
-import{a6 as e,a2 as o,c as a,o as t}from"./BqDk7vYE.js";const s={__name:"index",setup(n){return e(()=>{localStorage.getItem("token")||o("/login")}),(l,r)=>(t(),a("div",null,"Hello World"))}};export{s as default};

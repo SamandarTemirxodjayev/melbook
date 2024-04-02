@@ -5123,7 +5123,7 @@ const cfg0 = defineAppConfig({
 });
 const inlineConfig = {
   "nuxt": {
-    "buildId": "3f1169a4-9b79-4acc-bfee-596192dc349c"
+    "buildId": "adc84832-9255-4510-83bd-4e134c934658"
   },
   "ui": {
     "primary": "green",
@@ -5173,10 +5173,10 @@ async function getRouteRules(url) {
     return defu({}, ..._routeRulesMatcher.matchAll(url).reverse());
   }
 }
-const __nuxt_page_meta$5 = {
+const __nuxt_page_meta$6 = {
   layout: false
 };
-const __nuxt_page_meta$3 = {
+const __nuxt_page_meta$4 = {
   layout: false
 };
 const _routes = [
@@ -5186,7 +5186,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-Bf_vm7Oh.mjs').then((m) => m.default || m)
+    component: () => import('./index-58cNYiNM.mjs').then((m) => m.default || m)
   },
   {
     name: "banners",
@@ -5194,7 +5194,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-B-o6FeQw.mjs').then((m) => m.default || m)
+    component: () => import('./index-CL4QKKLn.mjs').then((m) => m.default || m)
   },
   {
     name: "books",
@@ -5202,7 +5202,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-rer8kSw7.mjs').then((m) => m.default || m)
+    component: () => import('./index-Bbv6WlAe.mjs').then((m) => m.default || m)
   },
   {
     name: "categories",
@@ -5210,14 +5210,14 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-CnDPDvP0.mjs').then((m) => m.default || m)
+    component: () => import('./index--iWxKq-G.mjs').then((m) => m.default || m)
   },
   {
-    name: (__nuxt_page_meta$5 == null ? void 0 : __nuxt_page_meta$5.name) ?? "exit",
-    path: (__nuxt_page_meta$5 == null ? void 0 : __nuxt_page_meta$5.path) ?? "/exit",
-    meta: __nuxt_page_meta$5 || {},
-    alias: (__nuxt_page_meta$5 == null ? void 0 : __nuxt_page_meta$5.alias) || [],
-    redirect: __nuxt_page_meta$5 == null ? void 0 : __nuxt_page_meta$5.redirect,
+    name: (__nuxt_page_meta$6 == null ? void 0 : __nuxt_page_meta$6.name) ?? "exit",
+    path: (__nuxt_page_meta$6 == null ? void 0 : __nuxt_page_meta$6.path) ?? "/exit",
+    meta: __nuxt_page_meta$6 || {},
+    alias: (__nuxt_page_meta$6 == null ? void 0 : __nuxt_page_meta$6.alias) || [],
+    redirect: __nuxt_page_meta$6 == null ? void 0 : __nuxt_page_meta$6.redirect,
     component: () => import('./exit-B5Dyujbc.mjs').then((m) => m.default || m)
   },
   {
@@ -5229,12 +5229,12 @@ const _routes = [
     component: () => import('./index-CUl2GINy.mjs').then((m) => m.default || m)
   },
   {
-    name: (__nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.name) ?? "login",
-    path: (__nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.path) ?? "/login",
-    meta: __nuxt_page_meta$3 || {},
-    alias: (__nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.alias) || [],
-    redirect: __nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.redirect,
-    component: () => import('./index-C1nwIwUk.mjs').then((m) => m.default || m)
+    name: (__nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.name) ?? "login",
+    path: (__nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.path) ?? "/login",
+    meta: __nuxt_page_meta$4 || {},
+    alias: (__nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.alias) || [],
+    redirect: __nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.redirect,
+    component: () => import('./index-CdOZTRca.mjs').then((m) => m.default || m)
   },
   {
     name: "notifications",
@@ -5242,7 +5242,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-CyDrMZWP.mjs').then((m) => m.default || m)
+    component: () => import('./index-BoOju6my.mjs').then((m) => m.default || m)
   },
   {
     name: "profile",
@@ -5250,7 +5250,15 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-DdvSNarM.mjs').then((m) => m.default || m)
+    component: () => import('./index-C5uWNmiI.mjs').then((m) => m.default || m)
+  },
+  {
+    name: "urls",
+    path: "/urls",
+    meta: {},
+    alias: [],
+    redirect: void 0 ,
+    component: () => import('./index-D9NJGZZq.mjs').then((m) => m.default || m)
   },
   {
     name: "users",
@@ -5258,7 +5266,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-B8p9r3hi.mjs').then((m) => m.default || m)
+    component: () => import('./index-C3ub2yXg.mjs').then((m) => m.default || m)
   }
 ];
 const _wrapIf = (component, props, slots) => {
@@ -8438,7 +8446,7 @@ const plugins = [
   plugin_server_jGJfoIcZXi
 ];
 const layouts = {
-  default: () => import('./default-kHYzA-y4.mjs').then((m) => m.default || m)
+  default: () => import('./default-CIKJj9wR.mjs').then((m) => m.default || m)
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
