@@ -6,6 +6,7 @@ const books_router = require("./books.router.js");
 const notifications_router = require("./notifications.router.js");
 const payment_router = require("./payments.router.js");
 const audios_router = require("./audios.router.js");
+const urls_router = require("./urls.router.js");
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use("/books", books_router);
 router.use("/notifications", notifications_router);
 router.use("/payments", payment_router);
 router.use("/audios", audios_router);
+router.use("/urls", urls_router);
 
 module.exports = router;

@@ -53,6 +53,11 @@ const links = [
     to: "/notifications",
   },
   {
+    label: "Ssilkalar",
+    icon: "i-heroicons-link",
+    to: "/urls",
+  },
+  {
     label: "Chiqish",
     icon: "i-heroicons-chevron-double-left",
     to: "/exit",
