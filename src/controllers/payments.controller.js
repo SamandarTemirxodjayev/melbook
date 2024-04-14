@@ -223,9 +223,8 @@ exports.getPaymentHistory = async (req, res) => {
 	try {
 		const payments = await Payments.find({
 			user_id: req.user._id,
-		})
-			.populate("book_id")
-			.populate("user_id");
+			status: 1,
+		});
 		return res.status(200).json({
 			message: "Payment history",
 			status: 200,
