@@ -16,5 +16,6 @@ router.put(
 );
 router.post("/click/create", userMiddleware, controller.createPaymentByClick);
 router.put("/click/:uuid", userMiddleware, controller.checkPaymentByClick);
+router.get("/history", userMiddleware, controller.getPaymentHistory);
 
 module.exports = router;

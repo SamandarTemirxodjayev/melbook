@@ -219,3 +219,21 @@ exports.checkPaymentByClick = async (req, res) => {
 		return res.status(500).json({message: error.message, status: 500});
 	}
 };
+exports.getPaymentHistory = async (req, res) => {
+	try {
+		const payments = await Payments.find({
+			user_id: req.user._id,
+		})
+			.populate("book_id")
+			.populate("user_id");
+		return res.status(200).json({
+			message: "Payment history",
+			status: 200,
+			data: {
+				payments,
+			},
+		});
+	} catch (error) {
+		return res.status(500).json({message: error.message, status: 500});
+	}
+};
