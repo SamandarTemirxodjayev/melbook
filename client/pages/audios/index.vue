@@ -7,6 +7,7 @@ let audios = ref([]);
 let isOpen = ref(false);
 let isLoading = ref(true);
 let photo_url = ref(null);
+let audio_content = ref(null);
 let text = ref(null);
 
 onMounted(async () => {
@@ -124,6 +125,7 @@ const addBanner = async () => {
         audio_url: data.fileUrl,
         name: text.value,
         book_id: book.value,
+        audio_content: audio_content.value,
       }),
     });
     isOpen.value = false;
@@ -254,6 +256,14 @@ defineShortcuts({
             size="lg"
           >
             <UInput type="text" size="lg" v-model="text" />
+          </UFormGroup>
+          <UFormGroup
+            class="my-[2%]"
+            label="Audioni Matni"
+            name="photo"
+            size="lg"
+          >
+            <UTextarea type="text" size="lg" v-model="audio_content" />
           </UFormGroup>
           <UFormGroup
             class="my-[2%]"

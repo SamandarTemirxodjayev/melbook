@@ -9,6 +9,10 @@ const audioSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	audio_content: {
+		type: String,
+		required: true,
+	},
 	book_id: {
 		type: Types.ObjectId,
 		ref: "books",

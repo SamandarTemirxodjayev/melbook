@@ -2,15 +2,18 @@ const Audios = require("../models/Audios");
 const Books = require("../models/Books");
 
 exports.createAudio = async (req, res) => {
-	const {name, audio_url, book_id} = req.body;
+	const {name, audio_url, book_id, audio_content} = req.body;
 	if (!name) return res.status(400).json({message: "Name is required"});
 	if (!audio_url) return res.status(400).json({message: "Audio is required"});
 	if (!book_id) return res.status(400).json({message: "Book is required"});
+	if (!audio_content)
+		return res.status(400).json({message: "Audio content is required"});
 	try {
 		const audio = await Audios.create({
 			name,
 			audio_url,
 			book_id,
+			audio_content,
 		});
 		const book = await Books.findById(book_id);
 		book.audios.push(audio._id);
