@@ -102,9 +102,7 @@ const deleteAudio = async (id) => {
   isLoading.value = false;
 };
 function handleFileChange(event) {
-  if (event.target.files.length > 0) {
-    photo_url.value = event.target.files[0];
-  }
+  photo_url.value = event.target.files[0];
 }
 const addBanner = async () => {
   isLoading.value = true;
@@ -116,7 +114,7 @@ const addBanner = async () => {
       method: "POST",
       body: formdata,
     });
-    const fetchBanner = await $fetch(BASE_URL + "/audios", {
+    await $fetch(BASE_URL + "/audios", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -130,7 +128,7 @@ const addBanner = async () => {
       }),
     });
     isOpen.value = false;
-    toast.add({ title: fetchBanner.message });
+    toast.add({ title: "Qo'shildi" });
     const res = await $fetch(BASE_URL + "/audios", {
       method: "GET",
       headers: {
