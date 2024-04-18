@@ -5,6 +5,7 @@ import { _ as __nuxt_component_5, a as __nuxt_component_6, b as __nuxt_component
 import { u as useFormGroup, a as useDebounceFn, c as computedAsync, b as useId, B as BASE_URL, C as CDN_URL } from './baseUrl-Ds9Li2ud.mjs';
 import { defineComponent, computed, ref, watch, provide, h, cloneVNode, reactive, onMounted, Fragment, watchEffect, inject, onUnmounted, nextTick, toRef, useSSRContext, isRef, withCtx, createTextVNode, unref, createVNode, toDisplayString, toRaw, shallowRef, triggerRef, onScopeDispose, resolveComponent, mergeProps, renderSlot, openBlock, createBlock, createCommentVNode, renderList, Transition } from 'vue';
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderAttr, ssrInterpolate, ssrRenderClass, ssrRenderSlot, ssrRenderList, ssrRenderStyle } from 'vue/server-renderer';
+import { _ as __nuxt_component_8 } from './Textarea-B1Ez_41h.mjs';
 import { d as dateFormat } from './formatters-9dGwSk4d.mjs';
 import 'node:http';
 import 'node:https';
@@ -1920,6 +1921,7 @@ const _sfc_main = {
     let isOpen = ref(false);
     let isLoading = ref(true);
     let photo_url = ref(null);
+    let audio_content = ref(null);
     let text = ref(null);
     const columns = [
       {
@@ -1994,6 +1996,7 @@ const _sfc_main = {
       try {
         const formdata = new FormData();
         formdata.append("file", photo_url.value);
+        console.log(formdata);
         const { data } = await $fetch(CDN_URL + "/upload", {
           method: "POST",
           body: formdata
@@ -2007,7 +2010,8 @@ const _sfc_main = {
           body: JSON.stringify({
             audio_url: data.fileUrl,
             name: text.value,
-            book_id: book.value
+            book_id: book.value,
+            audio_content: audio_content.value
           })
         });
         isOpen.value = false;
@@ -2050,6 +2054,7 @@ const _sfc_main = {
       const _component_UFormGroup = __nuxt_component_6;
       const _component_UInputMenu = __nuxt_component_7;
       const _component_UInput = __nuxt_component_7$1;
+      const _component_UTextarea = __nuxt_component_8;
       _push(`<div${ssrRenderAttrs(_attrs)}><div class="text-2xl font-bold">Audiolar</div><div class="shadow-2xl border border-gray-500 items-center my-4"><div class="flex p-4 justify-end">`);
       _push(ssrRenderComponent(_component_UButton, {
         size: "lg",
@@ -2295,6 +2300,33 @@ const _sfc_main = {
                         }, _parent4, _scopeId3));
                         _push4(ssrRenderComponent(_component_UFormGroup, {
                           class: "my-[2%]",
+                          label: "Audioni Matni",
+                          name: "photo",
+                          size: "lg"
+                        }, {
+                          default: withCtx((_4, _push5, _parent5, _scopeId4) => {
+                            if (_push5) {
+                              _push5(ssrRenderComponent(_component_UTextarea, {
+                                type: "text",
+                                size: "lg",
+                                modelValue: unref(audio_content),
+                                "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                              }, null, _parent5, _scopeId4));
+                            } else {
+                              return [
+                                createVNode(_component_UTextarea, {
+                                  type: "text",
+                                  size: "lg",
+                                  modelValue: unref(audio_content),
+                                  "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                                }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                              ];
+                            }
+                          }),
+                          _: 1
+                        }, _parent4, _scopeId3));
+                        _push4(ssrRenderComponent(_component_UFormGroup, {
+                          class: "my-[2%]",
                           label: "Audioni Yuklang",
                           name: "photo",
                           size: "lg"
@@ -2406,6 +2438,22 @@ const _sfc_main = {
                           }),
                           createVNode(_component_UFormGroup, {
                             class: "my-[2%]",
+                            label: "Audioni Matni",
+                            name: "photo",
+                            size: "lg"
+                          }, {
+                            default: withCtx(() => [
+                              createVNode(_component_UTextarea, {
+                                type: "text",
+                                size: "lg",
+                                modelValue: unref(audio_content),
+                                "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                              }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                            ]),
+                            _: 1
+                          }),
+                          createVNode(_component_UFormGroup, {
+                            class: "my-[2%]",
                             label: "Audioni Yuklang",
                             name: "photo",
                             size: "lg"
@@ -2485,6 +2533,22 @@ const _sfc_main = {
                               size: "lg",
                               modelValue: unref(text),
                               "onUpdate:modelValue": ($event) => isRef(text) ? text.value = $event : text = $event
+                            }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                          ]),
+                          _: 1
+                        }),
+                        createVNode(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          label: "Audioni Matni",
+                          name: "photo",
+                          size: "lg"
+                        }, {
+                          default: withCtx(() => [
+                            createVNode(_component_UTextarea, {
+                              type: "text",
+                              size: "lg",
+                              modelValue: unref(audio_content),
+                              "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
                             }, null, 8, ["modelValue", "onUpdate:modelValue"])
                           ]),
                           _: 1
@@ -2596,6 +2660,22 @@ const _sfc_main = {
                       }),
                       createVNode(_component_UFormGroup, {
                         class: "my-[2%]",
+                        label: "Audioni Matni",
+                        name: "photo",
+                        size: "lg"
+                      }, {
+                        default: withCtx(() => [
+                          createVNode(_component_UTextarea, {
+                            type: "text",
+                            size: "lg",
+                            modelValue: unref(audio_content),
+                            "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                          }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                        ]),
+                        _: 1
+                      }),
+                      createVNode(_component_UFormGroup, {
+                        class: "my-[2%]",
                         label: "Audioni Yuklang",
                         name: "photo",
                         size: "lg"
@@ -2653,4 +2733,4 @@ _sfc_main.setup = (props, ctx) => {
 };
 
 export { _sfc_main as default };
-//# sourceMappingURL=index-58cNYiNM.mjs.map
+//# sourceMappingURL=index-BOCN2vBt.mjs.map

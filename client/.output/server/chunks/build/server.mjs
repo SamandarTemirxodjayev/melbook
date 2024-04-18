@@ -5123,7 +5123,7 @@ const cfg0 = defineAppConfig({
 });
 const inlineConfig = {
   "nuxt": {
-    "buildId": "adc84832-9255-4510-83bd-4e134c934658"
+    "buildId": "d839d133-5e72-4c20-b5b2-4fd5743b614a"
   },
   "ui": {
     "primary": "green",
@@ -5186,7 +5186,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-58cNYiNM.mjs').then((m) => m.default || m)
+    component: () => import('./index-BOCN2vBt.mjs').then((m) => m.default || m)
   },
   {
     name: "banners",

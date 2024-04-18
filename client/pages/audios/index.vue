@@ -111,6 +111,7 @@ const addBanner = async () => {
   try {
     const formdata = new FormData();
     formdata.append("file", photo_url.value);
+    console.log(formdata);
     const { data } = await $fetch(CDN_URL + "/upload", {
       method: "POST",
       body: formdata,
