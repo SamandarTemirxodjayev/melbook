@@ -7,7 +7,6 @@ let audios = ref([]);
 let isOpen = ref(false);
 let isLoading = ref(true);
 let photo_url = ref(null);
-let audio_content = ref(null);
 let text = ref(null);
 
 onMounted(async () => {
@@ -102,19 +101,20 @@ const deleteAudio = async (id) => {
   isLoading.value = false;
 };
 function handleFileChange(event) {
-  photo_url.value = event.target.files[0];
+  if (event.target.files.length > 0) {
+    photo_url.value = event.target.files[0];
+  }
 }
 const addBanner = async () => {
   isLoading.value = true;
   try {
     const formdata = new FormData();
     formdata.append("file", photo_url.value);
-    console.log(formdata);
     const { data } = await $fetch(CDN_URL + "/upload", {
       method: "POST",
       body: formdata,
     });
-    await $fetch(BASE_URL + "/audios", {
+    const fetchBanner = await $fetch(BASE_URL + "/audios", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,11 +124,10 @@ const addBanner = async () => {
         audio_url: data.fileUrl,
         name: text.value,
         book_id: book.value,
-        audio_content: audio_content.value,
       }),
     });
     isOpen.value = false;
-    toast.add({ title: "Qo'shildi" });
+    toast.add({ title: fetchBanner.message });
     const res = await $fetch(BASE_URL + "/audios", {
       method: "GET",
       headers: {
@@ -255,14 +254,6 @@ defineShortcuts({
             size="lg"
           >
             <UInput type="text" size="lg" v-model="text" />
-          </UFormGroup>
-          <UFormGroup
-            class="my-[2%]"
-            label="Audioni Matni"
-            name="photo"
-            size="lg"
-          >
-            <UTextarea type="text" size="lg" v-model="audio_content" />
           </UFormGroup>
           <UFormGroup
             class="my-[2%]"
