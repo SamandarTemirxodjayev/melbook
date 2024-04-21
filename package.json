@@ -4,7 +4,9 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"dev": "nodemon index.js"
+		"dev": "nodemon index.js",
+		"build": "webpack --mode production",
+		"start": "node ./dist/build.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -20,5 +22,10 @@
 		"mongoose": "^8.2.1",
 		"multer": "^1.4.5-lts.1",
 		"uuid": "^9.0.1"
+	},
+	"devDependencies": {
+		"webpack": "^5.91.0",
+		"webpack-cli": "^5.1.4",
+		"webpack-node-externals": "^3.0.0"
 	}
 }
