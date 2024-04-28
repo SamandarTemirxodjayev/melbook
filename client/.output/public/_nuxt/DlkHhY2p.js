@@ -1,0 +1,1 @@
+import{_ as e}from"./B5TNgH4i.js";import{v as t,a2 as a,c as n,b as c,o as r}from"./C895ZlrV.js";const p={__name:"exit",setup(_){return t(()=>{localStorage.clear(),a("/login")}),(s,l)=>{const o=e;return r(),n("div",null,[c(o)])}}};export{p as default};

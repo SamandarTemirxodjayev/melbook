@@ -1,8 +1,8 @@
 const interopDefault = r => r.default || r || [];
 const styles = {
   "node_modules/.pnpm/nuxt@3.11.0_vite@5.1.6/node_modules/nuxt/dist/app/entry.js": () => import('./entry-styles.DlwUlA2p.mjs').then(interopDefault),
-  "node_modules/.pnpm/nuxt-icon@0.6.9_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/nuxt-icon/dist/runtime/Icon.vue": () => import('./Icon-styles.BV30EQxi.mjs').then(interopDefault),
   "node_modules/.pnpm/nuxt-icon@0.6.9_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/nuxt-icon/dist/runtime/IconCSS.vue": () => import('./IconCSS-styles.DUzI2ucc.mjs').then(interopDefault),
+  "node_modules/.pnpm/nuxt-icon@0.6.9_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/nuxt-icon/dist/runtime/Icon.vue": () => import('./Icon-styles.BV30EQxi.mjs').then(interopDefault),
   "node_modules/.pnpm/nuxt-icon@0.6.9_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/nuxt-icon/dist/runtime/Icon.vue?vue&type=style&index=0&scoped=099979df&lang.css": () => import('./Icon-styles.BV30EQxi.mjs').then(interopDefault),
   "node_modules/.pnpm/nuxt-icon@0.6.9_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/nuxt-icon/dist/runtime/IconCSS.vue?vue&type=style&index=0&scoped=6e7e87e4&lang.css": () => import('./IconCSS-styles.DUzI2ucc.mjs').then(interopDefault),
   "node_modules/.pnpm/@nuxt+ui@2.14.2_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/@nuxt/ui/dist/runtime/components/forms/Select.vue": () => import('./Select-styles.CnRC1eLq.mjs').then(interopDefault),

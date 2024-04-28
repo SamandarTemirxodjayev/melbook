@@ -4,7 +4,7 @@ import { f as f$2, s as s$2, d as defineShortcuts, o as o$3, t as t$2, _ as __nu
 import { _ as __nuxt_component_5, a as __nuxt_component_6, b as __nuxt_component_7$1 } from './Input-CVb3s9Kq.mjs';
 import { u as useFormGroup, a as useDebounceFn, c as computedAsync, b as useId, B as BASE_URL, C as CDN_URL } from './baseUrl-Ds9Li2ud.mjs';
 import { defineComponent, computed, ref, watch, provide, h, cloneVNode, reactive, onMounted, Fragment, watchEffect, inject, onUnmounted, nextTick, toRef, useSSRContext, isRef, withCtx, createTextVNode, unref, createVNode, toDisplayString, toRaw, shallowRef, triggerRef, onScopeDispose, resolveComponent, mergeProps, renderSlot, openBlock, createBlock, createCommentVNode, renderList, Transition } from 'vue';
-import { ssrRenderAttrs, ssrRenderComponent, ssrRenderAttr, ssrInterpolate, ssrRenderClass, ssrRenderSlot, ssrRenderList, ssrRenderStyle } from 'vue/server-renderer';
+import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderClass, ssrRenderSlot, ssrRenderList, ssrRenderStyle } from 'vue/server-renderer';
 import { _ as __nuxt_component_8 } from './Textarea-B1Ez_41h.mjs';
 import { d as dateFormat } from './formatters-9dGwSk4d.mjs';
 import 'node:http';
@@ -1918,15 +1918,21 @@ const _sfc_main = {
     let books = ref([]);
     let book = ref(null);
     let audios = ref([]);
+    let audio_id = ref(null);
     let isOpen = ref(false);
+    let isOpenEdit = ref(false);
     let isLoading = ref(true);
-    let photo_url = ref(null);
+    let audio_url = ref(null);
     let audio_content = ref(null);
     let text = ref(null);
     const columns = [
       {
         key: "name",
         label: "Nomi"
+      },
+      {
+        key: "audio_content",
+        label: "Matni"
       },
       {
         key: "book_id.name",
@@ -1951,9 +1957,21 @@ const _sfc_main = {
           label: "O'chirish",
           icon: "i-heroicons-trash-20-solid",
           click: () => deleteAudio(row._id)
+        },
+        {
+          label: "Tahrirlash",
+          icon: "i-heroicons-pencil-square-20-solid",
+          click: () => editAudio(row)
         }
       ]
     ];
+    const editAudio = (row) => {
+      isOpenEdit.value = true;
+      book.value = row.book_id._id;
+      audio_content.value = row.audio_content;
+      text.value = row.name;
+      audio_id.value = row._id;
+    };
     const deleteAudio = async (id) => {
       isLoading.value = true;
       try {
@@ -1987,21 +2005,19 @@ const _sfc_main = {
       isLoading.value = false;
     };
     function handleFileChange(event) {
-      if (event.target.files.length > 0) {
-        photo_url.value = event.target.files[0];
-      }
+      audio_url.value = event.target.files[0];
     }
     const addBanner = async () => {
       isLoading.value = true;
       try {
         const formdata = new FormData();
-        formdata.append("file", photo_url.value);
+        formdata.append("file", audio_url.value);
         console.log(formdata);
         const { data } = await $fetch(CDN_URL + "/upload", {
           method: "POST",
           body: formdata
         });
-        const fetchBanner = await $fetch(BASE_URL + "/audios", {
+        await $fetch(BASE_URL + "/audios", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -2015,7 +2031,7 @@ const _sfc_main = {
           })
         });
         isOpen.value = false;
-        toast.add({ title: fetchBanner.message });
+        toast.add({ title: "Qo'shildi" });
         const res = await $fetch(BASE_URL + "/audios", {
           method: "GET",
           headers: {
@@ -2023,7 +2039,43 @@ const _sfc_main = {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         });
-        photo_url.value = null;
+        audio_url.value = null;
+        text.value = null;
+        audios.value = res.data;
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          localStorage.removeItem("token");
+          navigateTo("/exit");
+        }
+        console.log(error);
+      }
+      isLoading.value = false;
+    };
+    const handleEditAudio = async () => {
+      isLoading.value = true;
+      try {
+        await $fetch(BASE_URL + "/audios/" + audio_id.value, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          },
+          body: JSON.stringify({
+            name: text.value,
+            book_id: book.value,
+            audio_content: audio_content.value
+          })
+        });
+        isOpenEdit.value = false;
+        toast.add({ title: "Yangilandi" });
+        const res = await $fetch(BASE_URL + "/audios", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        audio_url.value = null;
         text.value = null;
         audios.value = res.data;
       } catch (error) {
@@ -2041,6 +2093,18 @@ const _sfc_main = {
         whenever: [isOpen],
         handler: () => {
           isOpen.value = false;
+        }
+      }
+    });
+    defineShortcuts({
+      escape: {
+        usingInput: true,
+        whenever: [isOpenEdit],
+        handler: () => {
+          isOpenEdit.value = false;
+          book.value = null;
+          text.value = null;
+          audio_content.value = null;
         }
       }
     });
@@ -2086,15 +2150,12 @@ const _sfc_main = {
           label: "Audiolar Mavjud Emas"
         }
       }, {
-        "photo_url-data": withCtx(({ row }, _push2, _parent2, _scopeId) => {
+        "audio_content-data": withCtx(({ row }, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<img${ssrRenderAttr("src", row.photo_url)} alt=""${_scopeId}>`);
+            _push2(`<div class="whitespace-pre-line w-[300px]"${_scopeId}>${ssrInterpolate(row.audio_content)}</div>`);
           } else {
             return [
-              createVNode("img", {
-                src: row.photo_url,
-                alt: ""
-              }, null, 8, ["src"])
+              createVNode("div", { class: "whitespace-pre-line w-[300px]" }, toDisplayString(row.audio_content), 1)
             ];
           }
         }),
@@ -2721,6 +2782,478 @@ const _sfc_main = {
         }),
         _: 1
       }, _parent));
+      _push(ssrRenderComponent(_component_UModal, {
+        modelValue: unref(isOpenEdit),
+        "onUpdate:modelValue": ($event) => isRef(isOpenEdit) ? isOpenEdit.value = $event : isOpenEdit = $event,
+        "prevent-close": ""
+      }, {
+        default: withCtx((_, _push2, _parent2, _scopeId) => {
+          if (_push2) {
+            _push2(ssrRenderComponent(_component_UCard, { ui: {
+              ring: "",
+              divide: "divide-y divide-gray-100 dark:divide-gray-800"
+            } }, {
+              header: withCtx((_2, _push3, _parent3, _scopeId2) => {
+                if (_push3) {
+                  _push3(`<div class="flex items-center justify-between"${_scopeId2}><h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white"${_scopeId2}> Audio Qo&#39;shish </h3>`);
+                  _push3(ssrRenderComponent(_component_UButton, {
+                    color: "gray",
+                    variant: "ghost",
+                    icon: "i-heroicons-x-mark-20-solid",
+                    class: "-my-1",
+                    onClick: ($event) => isRef(isOpenEdit) ? isOpenEdit.value = false : isOpenEdit = false
+                  }, null, _parent3, _scopeId2));
+                  _push3(`</div>`);
+                } else {
+                  return [
+                    createVNode("div", { class: "flex items-center justify-between" }, [
+                      createVNode("h3", { class: "text-base font-semibold leading-6 text-gray-900 dark:text-white" }, " Audio Qo'shish "),
+                      createVNode(_component_UButton, {
+                        color: "gray",
+                        variant: "ghost",
+                        icon: "i-heroicons-x-mark-20-solid",
+                        class: "-my-1",
+                        onClick: ($event) => isRef(isOpenEdit) ? isOpenEdit.value = false : isOpenEdit = false
+                      }, null, 8, ["onClick"])
+                    ])
+                  ];
+                }
+              }),
+              default: withCtx((_2, _push3, _parent3, _scopeId2) => {
+                if (_push3) {
+                  _push3(ssrRenderComponent(_component_UForm, { onSubmit: handleEditAudio }, {
+                    default: withCtx((_3, _push4, _parent4, _scopeId3) => {
+                      if (_push4) {
+                        _push4(ssrRenderComponent(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          label: "Kitob Kategoriyasi",
+                          name: "photo"
+                        }, {
+                          default: withCtx((_4, _push5, _parent5, _scopeId4) => {
+                            if (_push5) {
+                              _push5(ssrRenderComponent(_component_UInputMenu, {
+                                modelValue: unref(book),
+                                "onUpdate:modelValue": ($event) => isRef(book) ? book.value = $event : book = $event,
+                                options: unref(books),
+                                placeholder: "Kitobni Tanglang",
+                                by: "_id",
+                                "value-attribute": "_id",
+                                "option-attribute": "name",
+                                "search-attributes": ["name"]
+                              }, {
+                                option: withCtx(({ option: item }, _push6, _parent6, _scopeId5) => {
+                                  if (_push6) {
+                                    _push6(`<span class="truncate"${_scopeId5}>${ssrInterpolate(item.name)}</span>`);
+                                  } else {
+                                    return [
+                                      createVNode("span", { class: "truncate" }, toDisplayString(item.name), 1)
+                                    ];
+                                  }
+                                }),
+                                _: 1
+                              }, _parent5, _scopeId4));
+                            } else {
+                              return [
+                                createVNode(_component_UInputMenu, {
+                                  modelValue: unref(book),
+                                  "onUpdate:modelValue": ($event) => isRef(book) ? book.value = $event : book = $event,
+                                  options: unref(books),
+                                  placeholder: "Kitobni Tanglang",
+                                  by: "_id",
+                                  "value-attribute": "_id",
+                                  "option-attribute": "name",
+                                  "search-attributes": ["name"]
+                                }, {
+                                  option: withCtx(({ option: item }) => [
+                                    createVNode("span", { class: "truncate" }, toDisplayString(item.name), 1)
+                                  ]),
+                                  _: 1
+                                }, 8, ["modelValue", "onUpdate:modelValue", "options"])
+                              ];
+                            }
+                          }),
+                          _: 1
+                        }, _parent4, _scopeId3));
+                        _push4(ssrRenderComponent(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          label: "Audioni Nomi",
+                          name: "photo",
+                          size: "lg"
+                        }, {
+                          default: withCtx((_4, _push5, _parent5, _scopeId4) => {
+                            if (_push5) {
+                              _push5(ssrRenderComponent(_component_UInput, {
+                                type: "text",
+                                size: "lg",
+                                modelValue: unref(text),
+                                "onUpdate:modelValue": ($event) => isRef(text) ? text.value = $event : text = $event
+                              }, null, _parent5, _scopeId4));
+                            } else {
+                              return [
+                                createVNode(_component_UInput, {
+                                  type: "text",
+                                  size: "lg",
+                                  modelValue: unref(text),
+                                  "onUpdate:modelValue": ($event) => isRef(text) ? text.value = $event : text = $event
+                                }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                              ];
+                            }
+                          }),
+                          _: 1
+                        }, _parent4, _scopeId3));
+                        _push4(ssrRenderComponent(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          label: "Audioni Matni",
+                          name: "photo",
+                          size: "lg"
+                        }, {
+                          default: withCtx((_4, _push5, _parent5, _scopeId4) => {
+                            if (_push5) {
+                              _push5(ssrRenderComponent(_component_UTextarea, {
+                                type: "text",
+                                size: "lg",
+                                modelValue: unref(audio_content),
+                                "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                              }, null, _parent5, _scopeId4));
+                            } else {
+                              return [
+                                createVNode(_component_UTextarea, {
+                                  type: "text",
+                                  size: "lg",
+                                  modelValue: unref(audio_content),
+                                  "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                                }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                              ];
+                            }
+                          }),
+                          _: 1
+                        }, _parent4, _scopeId3));
+                        _push4(ssrRenderComponent(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          name: "submit",
+                          size: "xl"
+                        }, {
+                          default: withCtx((_4, _push5, _parent5, _scopeId4) => {
+                            if (_push5) {
+                              _push5(ssrRenderComponent(_component_UButton, {
+                                loading: unref(isLoading),
+                                type: "submit",
+                                color: "primary",
+                                size: "xl",
+                                block: ""
+                              }, {
+                                default: withCtx((_5, _push6, _parent6, _scopeId5) => {
+                                  if (_push6) {
+                                    _push6(`Tasdiqlash`);
+                                  } else {
+                                    return [
+                                      createTextVNode("Tasdiqlash")
+                                    ];
+                                  }
+                                }),
+                                _: 1
+                              }, _parent5, _scopeId4));
+                            } else {
+                              return [
+                                createVNode(_component_UButton, {
+                                  loading: unref(isLoading),
+                                  type: "submit",
+                                  color: "primary",
+                                  size: "xl",
+                                  block: ""
+                                }, {
+                                  default: withCtx(() => [
+                                    createTextVNode("Tasdiqlash")
+                                  ]),
+                                  _: 1
+                                }, 8, ["loading"])
+                              ];
+                            }
+                          }),
+                          _: 1
+                        }, _parent4, _scopeId3));
+                      } else {
+                        return [
+                          createVNode(_component_UFormGroup, {
+                            class: "my-[2%]",
+                            label: "Kitob Kategoriyasi",
+                            name: "photo"
+                          }, {
+                            default: withCtx(() => [
+                              createVNode(_component_UInputMenu, {
+                                modelValue: unref(book),
+                                "onUpdate:modelValue": ($event) => isRef(book) ? book.value = $event : book = $event,
+                                options: unref(books),
+                                placeholder: "Kitobni Tanglang",
+                                by: "_id",
+                                "value-attribute": "_id",
+                                "option-attribute": "name",
+                                "search-attributes": ["name"]
+                              }, {
+                                option: withCtx(({ option: item }) => [
+                                  createVNode("span", { class: "truncate" }, toDisplayString(item.name), 1)
+                                ]),
+                                _: 1
+                              }, 8, ["modelValue", "onUpdate:modelValue", "options"])
+                            ]),
+                            _: 1
+                          }),
+                          createVNode(_component_UFormGroup, {
+                            class: "my-[2%]",
+                            label: "Audioni Nomi",
+                            name: "photo",
+                            size: "lg"
+                          }, {
+                            default: withCtx(() => [
+                              createVNode(_component_UInput, {
+                                type: "text",
+                                size: "lg",
+                                modelValue: unref(text),
+                                "onUpdate:modelValue": ($event) => isRef(text) ? text.value = $event : text = $event
+                              }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                            ]),
+                            _: 1
+                          }),
+                          createVNode(_component_UFormGroup, {
+                            class: "my-[2%]",
+                            label: "Audioni Matni",
+                            name: "photo",
+                            size: "lg"
+                          }, {
+                            default: withCtx(() => [
+                              createVNode(_component_UTextarea, {
+                                type: "text",
+                                size: "lg",
+                                modelValue: unref(audio_content),
+                                "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                              }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                            ]),
+                            _: 1
+                          }),
+                          createVNode(_component_UFormGroup, {
+                            class: "my-[2%]",
+                            name: "submit",
+                            size: "xl"
+                          }, {
+                            default: withCtx(() => [
+                              createVNode(_component_UButton, {
+                                loading: unref(isLoading),
+                                type: "submit",
+                                color: "primary",
+                                size: "xl",
+                                block: ""
+                              }, {
+                                default: withCtx(() => [
+                                  createTextVNode("Tasdiqlash")
+                                ]),
+                                _: 1
+                              }, 8, ["loading"])
+                            ]),
+                            _: 1
+                          })
+                        ];
+                      }
+                    }),
+                    _: 1
+                  }, _parent3, _scopeId2));
+                } else {
+                  return [
+                    createVNode(_component_UForm, { onSubmit: handleEditAudio }, {
+                      default: withCtx(() => [
+                        createVNode(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          label: "Kitob Kategoriyasi",
+                          name: "photo"
+                        }, {
+                          default: withCtx(() => [
+                            createVNode(_component_UInputMenu, {
+                              modelValue: unref(book),
+                              "onUpdate:modelValue": ($event) => isRef(book) ? book.value = $event : book = $event,
+                              options: unref(books),
+                              placeholder: "Kitobni Tanglang",
+                              by: "_id",
+                              "value-attribute": "_id",
+                              "option-attribute": "name",
+                              "search-attributes": ["name"]
+                            }, {
+                              option: withCtx(({ option: item }) => [
+                                createVNode("span", { class: "truncate" }, toDisplayString(item.name), 1)
+                              ]),
+                              _: 1
+                            }, 8, ["modelValue", "onUpdate:modelValue", "options"])
+                          ]),
+                          _: 1
+                        }),
+                        createVNode(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          label: "Audioni Nomi",
+                          name: "photo",
+                          size: "lg"
+                        }, {
+                          default: withCtx(() => [
+                            createVNode(_component_UInput, {
+                              type: "text",
+                              size: "lg",
+                              modelValue: unref(text),
+                              "onUpdate:modelValue": ($event) => isRef(text) ? text.value = $event : text = $event
+                            }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                          ]),
+                          _: 1
+                        }),
+                        createVNode(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          label: "Audioni Matni",
+                          name: "photo",
+                          size: "lg"
+                        }, {
+                          default: withCtx(() => [
+                            createVNode(_component_UTextarea, {
+                              type: "text",
+                              size: "lg",
+                              modelValue: unref(audio_content),
+                              "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                            }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                          ]),
+                          _: 1
+                        }),
+                        createVNode(_component_UFormGroup, {
+                          class: "my-[2%]",
+                          name: "submit",
+                          size: "xl"
+                        }, {
+                          default: withCtx(() => [
+                            createVNode(_component_UButton, {
+                              loading: unref(isLoading),
+                              type: "submit",
+                              color: "primary",
+                              size: "xl",
+                              block: ""
+                            }, {
+                              default: withCtx(() => [
+                                createTextVNode("Tasdiqlash")
+                              ]),
+                              _: 1
+                            }, 8, ["loading"])
+                          ]),
+                          _: 1
+                        })
+                      ]),
+                      _: 1
+                    })
+                  ];
+                }
+              }),
+              _: 1
+            }, _parent2, _scopeId));
+          } else {
+            return [
+              createVNode(_component_UCard, { ui: {
+                ring: "",
+                divide: "divide-y divide-gray-100 dark:divide-gray-800"
+              } }, {
+                header: withCtx(() => [
+                  createVNode("div", { class: "flex items-center justify-between" }, [
+                    createVNode("h3", { class: "text-base font-semibold leading-6 text-gray-900 dark:text-white" }, " Audio Qo'shish "),
+                    createVNode(_component_UButton, {
+                      color: "gray",
+                      variant: "ghost",
+                      icon: "i-heroicons-x-mark-20-solid",
+                      class: "-my-1",
+                      onClick: ($event) => isRef(isOpenEdit) ? isOpenEdit.value = false : isOpenEdit = false
+                    }, null, 8, ["onClick"])
+                  ])
+                ]),
+                default: withCtx(() => [
+                  createVNode(_component_UForm, { onSubmit: handleEditAudio }, {
+                    default: withCtx(() => [
+                      createVNode(_component_UFormGroup, {
+                        class: "my-[2%]",
+                        label: "Kitob Kategoriyasi",
+                        name: "photo"
+                      }, {
+                        default: withCtx(() => [
+                          createVNode(_component_UInputMenu, {
+                            modelValue: unref(book),
+                            "onUpdate:modelValue": ($event) => isRef(book) ? book.value = $event : book = $event,
+                            options: unref(books),
+                            placeholder: "Kitobni Tanglang",
+                            by: "_id",
+                            "value-attribute": "_id",
+                            "option-attribute": "name",
+                            "search-attributes": ["name"]
+                          }, {
+                            option: withCtx(({ option: item }) => [
+                              createVNode("span", { class: "truncate" }, toDisplayString(item.name), 1)
+                            ]),
+                            _: 1
+                          }, 8, ["modelValue", "onUpdate:modelValue", "options"])
+                        ]),
+                        _: 1
+                      }),
+                      createVNode(_component_UFormGroup, {
+                        class: "my-[2%]",
+                        label: "Audioni Nomi",
+                        name: "photo",
+                        size: "lg"
+                      }, {
+                        default: withCtx(() => [
+                          createVNode(_component_UInput, {
+                            type: "text",
+                            size: "lg",
+                            modelValue: unref(text),
+                            "onUpdate:modelValue": ($event) => isRef(text) ? text.value = $event : text = $event
+                          }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                        ]),
+                        _: 1
+                      }),
+                      createVNode(_component_UFormGroup, {
+                        class: "my-[2%]",
+                        label: "Audioni Matni",
+                        name: "photo",
+                        size: "lg"
+                      }, {
+                        default: withCtx(() => [
+                          createVNode(_component_UTextarea, {
+                            type: "text",
+                            size: "lg",
+                            modelValue: unref(audio_content),
+                            "onUpdate:modelValue": ($event) => isRef(audio_content) ? audio_content.value = $event : audio_content = $event
+                          }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                        ]),
+                        _: 1
+                      }),
+                      createVNode(_component_UFormGroup, {
+                        class: "my-[2%]",
+                        name: "submit",
+                        size: "xl"
+                      }, {
+                        default: withCtx(() => [
+                          createVNode(_component_UButton, {
+                            loading: unref(isLoading),
+                            type: "submit",
+                            color: "primary",
+                            size: "xl",
+                            block: ""
+                          }, {
+                            default: withCtx(() => [
+                              createTextVNode("Tasdiqlash")
+                            ]),
+                            _: 1
+                          }, 8, ["loading"])
+                        ]),
+                        _: 1
+                      })
+                    ]),
+                    _: 1
+                  })
+                ]),
+                _: 1
+              })
+            ];
+          }
+        }),
+        _: 1
+      }, _parent));
       _push(`</div>`);
     };
   }
@@ -2733,4 +3266,4 @@ _sfc_main.setup = (props, ctx) => {
 };
 
 export { _sfc_main as default };
-//# sourceMappingURL=index-BOCN2vBt.mjs.map
+//# sourceMappingURL=index-DrBQui7J.mjs.map
