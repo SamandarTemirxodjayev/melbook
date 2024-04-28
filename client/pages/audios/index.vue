@@ -4,9 +4,11 @@ const toast = useToast();
 let books = ref([]);
 let book = ref(null);
 let audios = ref([]);
+let audio_id = ref(null);
 let isOpen = ref(false);
+let isOpenEdit = ref(false);
 let isLoading = ref(true);
-let photo_url = ref(null);
+let audio_url = ref(null);
 let audio_content = ref(null);
 let text = ref(null);
 
@@ -44,6 +46,10 @@ const columns = [
     label: "Nomi",
   },
   {
+    key: "audio_content",
+    label: "Matni",
+  },
+  {
     key: "book_id.name",
     label: "Kitob",
   },
@@ -67,8 +73,22 @@ const items = (row) => [
       icon: "i-heroicons-trash-20-solid",
       click: () => deleteAudio(row._id),
     },
+    {
+      label: "Tahrirlash",
+      icon: "i-heroicons-pencil-square-20-solid",
+      click: () => editAudio(row),
+    },
   ],
 ];
+
+const editAudio = (row) => {
+  isOpenEdit.value = true;
+  book.value = row.book_id._id;
+  audio_content.value = row.audio_content;
+  text.value = row.name;
+  audio_id.value = row._id;
+};
+
 const deleteAudio = async (id) => {
   isLoading.value = true;
   try {
@@ -102,13 +122,13 @@ const deleteAudio = async (id) => {
   isLoading.value = false;
 };
 function handleFileChange(event) {
-  photo_url.value = event.target.files[0];
+  audio_url.value = event.target.files[0];
 }
 const addBanner = async () => {
   isLoading.value = true;
   try {
     const formdata = new FormData();
-    formdata.append("file", photo_url.value);
+    formdata.append("file", audio_url.value);
     console.log(formdata);
     const { data } = await $fetch(CDN_URL + "/upload", {
       method: "POST",
@@ -136,7 +156,43 @@ const addBanner = async () => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    photo_url.value = null;
+    audio_url.value = null;
+    text.value = null;
+    audios.value = res.data;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      navigateTo("/exit");
+    }
+    console.log(error);
+  }
+  isLoading.value = false;
+};
+const handleEditAudio = async () => {
+  isLoading.value = true;
+  try {
+    await $fetch(BASE_URL + "/audios/" + audio_id.value, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        name: text.value,
+        book_id: book.value,
+        audio_content: audio_content.value,
+      }),
+    });
+    isOpenEdit.value = false;
+    toast.add({ title: "Yangilandi" });
+    const res = await $fetch(BASE_URL + "/audios", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    audio_url.value = null;
     text.value = null;
     audios.value = res.data;
   } catch (error) {
@@ -155,6 +211,18 @@ defineShortcuts({
     whenever: [isOpen],
     handler: () => {
       isOpen.value = false;
+    },
+  },
+});
+defineShortcuts({
+  escape: {
+    usingInput: true,
+    whenever: [isOpenEdit],
+    handler: () => {
+      isOpenEdit.value = false;
+      book.value = null;
+      text.value = null;
+      audio_content.value = null;
     },
   },
 });
@@ -182,8 +250,10 @@ defineShortcuts({
         label: 'Audiolar Mavjud Emas',
       }"
     >
-      <template #photo_url-data="{ row }">
-        <img :src="row.photo_url" alt="" />
+      <template #audio_content-data="{ row }">
+        <div class="whitespace-pre-line w-[300px]">
+          {{ row.audio_content }}
+        </div>
       </template>
       <template #createdAt-data="{ row }">
         {{ dateFormat(row.createdAt) }}
@@ -271,6 +341,77 @@ defineShortcuts({
             size="lg"
           >
             <UInput type="file" size="lg" @change="handleFileChange" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" name="submit" size="xl">
+            <UButton
+              :loading="isLoading"
+              type="submit"
+              color="primary"
+              size="xl"
+              block
+              >Tasdiqlash</UButton
+            >
+          </UFormGroup>
+        </UForm>
+      </UCard>
+    </UModal>
+
+    <UModal v-model="isOpenEdit" prevent-close>
+      <UCard
+        :ui="{
+          ring: '',
+          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+        }"
+      >
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3
+              class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+            >
+              Audio Qo'shish
+            </h3>
+            <UButton
+              color="gray"
+              variant="ghost"
+              icon="i-heroicons-x-mark-20-solid"
+              class="-my-1"
+              @click="isOpenEdit = false"
+            />
+          </div>
+        </template>
+
+        <UForm @submit="handleEditAudio">
+          <UFormGroup class="my-[2%]" label="Kitob Kategoriyasi" name="photo">
+            <UInputMenu
+              v-model="book"
+              :options="books"
+              placeholder="Kitobni Tanglang"
+              by="_id"
+              value-attribute="_id"
+              option-attribute="name"
+              :search-attributes="['name']"
+            >
+              <template #option="{ option: item }">
+                <span class="truncate">{{ item.name }}</span>
+              </template>
+            </UInputMenu>
+          </UFormGroup>
+
+          <UFormGroup
+            class="my-[2%]"
+            label="Audioni Nomi"
+            name="photo"
+            size="lg"
+          >
+            <UInput type="text" size="lg" v-model="text" />
+          </UFormGroup>
+          <UFormGroup
+            class="my-[2%]"
+            label="Audioni Matni"
+            name="photo"
+            size="lg"
+          >
+            <UTextarea type="text" size="lg" v-model="audio_content" />
           </UFormGroup>
           <UFormGroup class="my-[2%]" name="submit" size="xl">
             <UButton

@@ -47,3 +47,19 @@ exports.deleteAudio = async (req, res) => {
 		return res.status(500).json({message: error.message});
 	}
 };
+exports.updateAudio = async (req, res) => {
+	try {
+		const audio = await Audios.findById(req.params.id);
+		audio.name = req.body.name;
+		audio.audio_content = req.body.audio_content;
+		audio.book_id = req.body.book_id;
+		await audio.save();
+		return res.status(200).json({
+			message: "Audio Updated",
+			status: 200,
+			data: audio,
+		});
+	} catch (error) {
+		return res.status(500).json({message: error.message});
+	}
+};
