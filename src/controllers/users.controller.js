@@ -61,6 +61,7 @@ exports.register = async (req, res) => {
 			surname,
 			phone_number,
 			password: hashedPassword,
+			auth_token: token,
 		});
 		const token = jwt.sign(
 			{
@@ -130,6 +131,8 @@ exports.login = async (req, res) => {
 				expiresIn: "30d",
 			},
 		);
+		user.auth_token = token;
+		await user.save();
 		return res.status(200).json({
 			status: 200,
 			message: "Tizimga Muvaffaqiyatli kirildi",

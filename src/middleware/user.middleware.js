@@ -21,7 +21,7 @@ async function UserMiddleware(req, res, next) {
 	try {
 		const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
 		const user = await Users.findById(decoded.userId);
-		if (!user) {
+		if (!user || user.auth_token != accessToken) {
 			return res
 				.status(401)
 				.json({error: "Not Authorized!", message: "Invalid access token"});

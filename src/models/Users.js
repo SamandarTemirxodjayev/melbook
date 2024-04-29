@@ -35,6 +35,9 @@ const userSchema = new Schema({
 			ref: "books",
 		},
 	],
+	auth_token: {
+		type: String,
+	},
 });
 
 userSchema.set("timestamps", true);
