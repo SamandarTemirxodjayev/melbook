@@ -61,7 +61,6 @@ exports.register = async (req, res) => {
 			surname,
 			phone_number,
 			password: hashedPassword,
-			auth_token: token,
 		});
 		const token = jwt.sign(
 			{
@@ -72,6 +71,8 @@ exports.register = async (req, res) => {
 				expiresIn: "30d",
 			},
 		);
+		user.auth_token = token;
+		await user.save();
 		return res.status(201).json({
 			message: "Foydalanuvchi Ro'yxatdan O'tkazildi",
 			status: 201,
