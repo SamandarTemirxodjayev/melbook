@@ -29,12 +29,10 @@ const userSchema = new Schema({
 		type: Number,
 		default: 0,
 	},
-	boughtBooks: [
-		{
-			type: Types.ObjectId,
-			ref: "books",
-		},
-	],
+	boughtBooks: {
+		type: [{type: Types.ObjectId, ref: "books"}],
+		default: [new Types.ObjectId("662f42d5f00b1eb5ce0fe9c6")],
+	},
 	auth_token: {
 		type: String,
 	},

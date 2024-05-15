@@ -13,7 +13,7 @@ app.use("/api", router);
 const PORT = process.env.PORT || 3000;
 
 mongoose
-	.connect("mongodb://localhost:27017/melbook")
+	.connect("mongodb://localhost:27017/melbook") 
 	.then(() => {
 		console.log("connected to database");
 	})
