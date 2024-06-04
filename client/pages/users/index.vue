@@ -4,9 +4,13 @@ const toast = useToast();
 let users = ref([]);
 let isOpen = ref(false);
 let isLoading = ref(true);
-let categoryText = ref("");
-let editedItem = ref(null);
-let isEditOpen = ref(false);
+let user = reactive({
+  username: "",
+  name: "",
+  surname: "",
+  phone_number: "",
+  password: "",
+});
 let page = ref(1);
 let pageCount = ref(20);
 
@@ -82,7 +86,45 @@ const deleteUser = async (id) => {
       toast.add({ title: data.message });
       const res = await $fetch(BASE_URL + "/user/get-all", {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
+      users.value = res.data;
+    } else {
+      toast.add({ title: data.message });
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      navigateTo("/exit");
+    }
+  }
+  isLoading.value = false;
+};
+const addUser = async () => {
+  isLoading.value = true;
+  try {
+    console.log(user);
+    const data = await $fetch(BASE_URL + "/user/register/by-admin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(user),
+    });
+    if (data.status === 200) {
+      toast.add({ title: data.message });
+      const res = await $fetch(BASE_URL + "/user/get-all", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      isOpen.value = false;
       users.value = res.data;
     } else {
       toast.add({ title: data.message });
@@ -101,11 +143,23 @@ const rows = computed(() => {
     page.value * pageCount.value
   );
 });
+defineShortcuts({
+  escape: {
+    usingInput: true,
+    whenever: [isOpen],
+    handler: () => {
+      isOpen.value = false;
+    },
+  },
+});
 </script>
 
 <template>
   <div>
     <div class="text-2xl font-bold">Foydalanuvchilar</div>
+    <div class="flex p-4 justify-end">
+      <UButton @click="isOpen = true"> Foydalanuvchi Qo'shish </UButton>
+    </div>
     <UTable
       :loading="isLoading"
       :loading-state="{
@@ -154,5 +208,66 @@ const rows = computed(() => {
         :total="users.length"
       />
     </div>
+    <UModal v-model="isOpen" prevent-close>
+      <UCard
+        :ui="{
+          ring: '',
+          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+        }"
+      >
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3
+              class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+            >
+              Audio Qo'shish
+            </h3>
+            <UButton
+              color="gray"
+              variant="ghost"
+              icon="i-heroicons-x-mark-20-solid"
+              class="-my-1"
+              @click="isOpen = false"
+            />
+          </div>
+        </template>
+
+        <UForm @submit="addUser">
+          <UFormGroup class="my-[2%]" label="Foydalanuvchi Logini" size="lg">
+            <UInput type="text" size="lg" v-model="user.username" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Foydalanuvchi Ismi" size="lg">
+            <UInput type="text" size="lg" v-model="user.name" />
+          </UFormGroup>
+          <UFormGroup
+            class="my-[2%]"
+            label="Foydalanuvchi Familiyasi"
+            size="lg"
+          >
+            <UInput type="text" size="lg" v-model="user.surname" />
+          </UFormGroup>
+          <UFormGroup
+            class="my-[2%]"
+            label="Foydalanuvchi Telefon raqami"
+            size="lg"
+          >
+            <UInput type="text" size="lg" v-model="user.phone_number" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" label="Foydalanuvchi Paroli" size="lg">
+            <UInput type="text" size="lg" v-model="user.password" />
+          </UFormGroup>
+          <UFormGroup class="my-[2%]" name="submit" size="xl">
+            <UButton
+              :loading="isLoading"
+              type="submit"
+              color="primary"
+              size="xl"
+              block
+              >Tasdiqlash</UButton
+            >
+          </UFormGroup>
+        </UForm>
+      </UCard>
+    </UModal>
   </div>
 </template>

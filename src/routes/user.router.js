@@ -5,6 +5,7 @@ const adminMiddleware = require("../middleware/admin.middleware.js");
 const router = Router();
 
 router.post("/register", controller.register);
+router.post("/register/by-admin", controller.registerByAdmin);
 router.post("/login", controller.login);
 router.get("/get-me", middleware, controller.getMe);
 router.get("/get-all", adminMiddleware, controller.getAll);

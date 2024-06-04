@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Users = require("../models/Users");
+const {Types} = require("mongoose");
 require("dotenv").config();
 
 exports.register = async (req, res) => {
@@ -76,6 +77,97 @@ exports.register = async (req, res) => {
 		return res.status(201).json({
 			message: "Foydalanuvchi Ro'yxatdan O'tkazildi",
 			status: 201,
+			data: {
+				user,
+				token,
+				token_expiration: new Date(
+					Date.now() + 12 * 60 * 60 * 1000 * 30,
+				).toISOString(),
+				token_type: "Bearer",
+			},
+		});
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message,
+			status: 500,
+		});
+	}
+};
+exports.registerByAdmin = async (req, res) => {
+	console.log(req.body);
+	const {username, name, surname, phone_number, password} = req.body;
+	if (!username) {
+		return res.status(400).json({
+			message: "Username is required",
+			status: 400,
+		});
+	}
+	if (!name) {
+		return res.status(400).json({
+			message: "Name is required",
+			status: 400,
+		});
+	}
+	if (!surname) {
+		return res.status(400).json({
+			message: "Surname is required",
+			status: 400,
+		});
+	}
+	if (!phone_number) {
+		return res.status(400).json({
+			message: "Phone number is required",
+			status: 400,
+		});
+	}
+	if (!password) {
+		return res.status(400).json({
+			message: "Password is required",
+			status: 400,
+		});
+	}
+	try {
+		let find_user = await Users.findOne({
+			username,
+		});
+		if (find_user) {
+			return res.status(400).json({
+				message: "Username already exists",
+				status: 400,
+			});
+		}
+		find_user = await Users.findOne({
+			phone_number,
+		});
+		if (find_user) {
+			return res.status(400).json({
+				message: "Phone number already exists",
+				status: 400,
+			});
+		}
+		const hashedPassword = await bcrypt.hash(password, 10);
+		const user = await Users.create({
+			username,
+			name,
+			surname,
+			phone_number,
+			password: hashedPassword,
+			boughtBooks: [new Types.ObjectId("662f42d5f00b1eb5ce0fe9c6")],
+		});
+		const token = jwt.sign(
+			{
+				userId: user._id,
+			},
+			process.env.ACCESS_TOKEN_SECRET,
+			{
+				expiresIn: "30d",
+			},
+		);
+		user.auth_token = token;
+		await user.save();
+		return res.status(201).json({
+			message: "Foydalanuvchi Ro'yxatdan O'tkazildi",
+			status: 200,
 			data: {
 				user,
 				token,
