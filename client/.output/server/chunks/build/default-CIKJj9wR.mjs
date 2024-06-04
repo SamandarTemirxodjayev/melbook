@@ -1,4 +1,4 @@
-import { m as mergeConfig, b as appConfig, f as useUI, h as useInjectButtonGroup, t as twMerge, i as twJoin, d as __nuxt_component_2$1, e as __nuxt_component_1$1, G as __nuxt_component_0$1, H as getULinkProps, J as useRoute, _ as _export_sfc, I as useState } from './server.mjs';
+import { m as mergeConfig, b as appConfig, f as useUI, h as useInjectButtonGroup, t as twMerge, i as twJoin, d as __nuxt_component_2, e as __nuxt_component_1$1, G as __nuxt_component_0$2, H as getULinkProps, J as useRoute, _ as _export_sfc, I as useState } from './server.mjs';
 import { defineComponent, ref, provide, createElementBlock, toRef, computed, useSSRContext, withCtx, createVNode, mergeProps, renderSlot, openBlock, createBlock, createCommentVNode, createTextVNode, toDisplayString } from 'vue';
 import { ssrRenderComponent, ssrRenderSlot, ssrRenderAttrs, ssrInterpolate, ssrRenderClass, ssrRenderList } from 'vue/server-renderer';
 import 'node:http';
@@ -237,7 +237,7 @@ const __nuxt_component_3 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender
 const config$1 = mergeConfig(appConfig.ui.strategy, appConfig.ui.divider, divider);
 const _sfc_main$2 = defineComponent({
   components: {
-    UIcon: __nuxt_component_2$1,
+    UIcon: __nuxt_component_2,
     UAvatar: __nuxt_component_1$1
   },
   inheritAttrs: false,
@@ -313,7 +313,7 @@ const _sfc_main$2 = defineComponent({
   }
 });
 function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_UIcon = __nuxt_component_2$1;
+  const _component_UIcon = __nuxt_component_2;
   const _component_UAvatar = __nuxt_component_1$1;
   _push(`<div${ssrRenderAttrs(mergeProps({ class: _ctx.wrapperClass }, _ctx.attrs, _attrs))}><div class="${ssrRenderClass(_ctx.borderClass)}"></div>`);
   if (_ctx.label || _ctx.icon || _ctx.avatar || _ctx.$slots.default) {
@@ -350,10 +350,10 @@ const __nuxt_component_4 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender
 const config = mergeConfig(appConfig.ui.strategy, appConfig.ui.verticalNavigation, verticalNavigation);
 const _sfc_main$1 = defineComponent({
   components: {
-    UIcon: __nuxt_component_2$1,
+    UIcon: __nuxt_component_2,
     UAvatar: __nuxt_component_1$1,
     UBadge: __nuxt_component_3,
-    ULink: __nuxt_component_0$1,
+    ULink: __nuxt_component_0$2,
     UDivider: __nuxt_component_4
   },
   inheritAttrs: false,
@@ -386,9 +386,9 @@ const _sfc_main$1 = defineComponent({
   }
 });
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_ULink = __nuxt_component_0$1;
+  const _component_ULink = __nuxt_component_0$2;
   const _component_UAvatar = __nuxt_component_1$1;
-  const _component_UIcon = __nuxt_component_2$1;
+  const _component_UIcon = __nuxt_component_2;
   const _component_UBadge = __nuxt_component_3;
   const _component_UDivider = __nuxt_component_4;
   _push(`<nav${ssrRenderAttrs(mergeProps({

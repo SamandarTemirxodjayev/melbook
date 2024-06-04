@@ -5123,7 +5123,7 @@ const cfg0 = defineAppConfig({
 });
 const inlineConfig = {
   "nuxt": {
-    "buildId": "a1a4abd7-5b8b-4880-987c-4e635af85b90"
+    "buildId": "7b7c5d67-ac58-46e0-b957-97cc74897078"
   },
   "ui": {
     "primary": "green",
@@ -5186,7 +5186,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-DrBQui7J.mjs').then((m) => m.default || m)
+    component: () => import('./index-BDKE9DQ7.mjs').then((m) => m.default || m)
   },
   {
     name: "banners",
@@ -5194,7 +5194,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-CL4QKKLn.mjs').then((m) => m.default || m)
+    component: () => import('./index-BETnCjsr.mjs').then((m) => m.default || m)
   },
   {
     name: "books",
@@ -5202,7 +5202,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-Bbv6WlAe.mjs').then((m) => m.default || m)
+    component: () => import('./index-D5xXsRfe.mjs').then((m) => m.default || m)
   },
   {
     name: "categories",
@@ -5210,7 +5210,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index--iWxKq-G.mjs').then((m) => m.default || m)
+    component: () => import('./index-D7w2yOdB.mjs').then((m) => m.default || m)
   },
   {
     name: (__nuxt_page_meta$6 == null ? void 0 : __nuxt_page_meta$6.name) ?? "exit",
@@ -5234,7 +5234,7 @@ const _routes = [
     meta: __nuxt_page_meta$4 || {},
     alias: (__nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.alias) || [],
     redirect: __nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.redirect,
-    component: () => import('./index-CdOZTRca.mjs').then((m) => m.default || m)
+    component: () => import('./index-B5Ad-8E5.mjs').then((m) => m.default || m)
   },
   {
     name: "notifications",
@@ -5242,7 +5242,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-BoOju6my.mjs').then((m) => m.default || m)
+    component: () => import('./index-Stnx71Fp.mjs').then((m) => m.default || m)
   },
   {
     name: "profile",
@@ -5250,7 +5250,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-C5uWNmiI.mjs').then((m) => m.default || m)
+    component: () => import('./index-DvZIBxUx.mjs').then((m) => m.default || m)
   },
   {
     name: "urls",
@@ -5258,7 +5258,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-D9NJGZZq.mjs').then((m) => m.default || m)
+    component: () => import('./index-tj16UILS.mjs').then((m) => m.default || m)
   },
   {
     name: "users",
@@ -5266,7 +5266,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-C3ub2yXg.mjs').then((m) => m.default || m)
+    component: () => import('./index-qnJrHWHz.mjs').then((m) => m.default || m)
   }
 ];
 const _wrapIf = (component, props, slots) => {
@@ -8460,7 +8460,7 @@ const LayoutLoader = defineComponent({
     return () => h(LayoutComponent, props.layoutProps, context.slots);
   }
 });
-const __nuxt_component_0$4 = defineComponent({
+const __nuxt_component_0$5 = defineComponent({
   name: "NuxtLayout",
   inheritAttrs: false,
   props: {
@@ -9100,7 +9100,7 @@ const RouteProvider = defineComponent({
     };
   }
 });
-const __nuxt_component_2$2 = defineComponent({
+const __nuxt_component_2$1 = defineComponent({
   name: "NuxtPage",
   inheritAttrs: false,
   props: {
@@ -11454,10 +11454,10 @@ _sfc_main$9.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt-icon@0.6.9_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/nuxt-icon/dist/runtime/Icon.vue");
   return _sfc_setup$9 ? _sfc_setup$9(props, ctx) : void 0;
 };
-const __nuxt_component_0$3 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-099979df"]]);
+const __nuxt_component_0$4 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-099979df"]]);
 const Icon = /* @__PURE__ */ Object.freeze({
   __proto__: null,
-  default: __nuxt_component_0$3
+  default: __nuxt_component_0$4
 });
 const _sfc_main$8 = defineComponent({
   props: {
@@ -11483,7 +11483,7 @@ const _sfc_main$8 = defineComponent({
   }
 });
 function _sfc_ssrRender$6(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_Icon = __nuxt_component_0$3;
+  const _component_Icon = __nuxt_component_0$4;
   if (_ctx.dynamic) {
     _push(ssrRenderComponent(_component_Icon, mergeProps({ name: _ctx.name }, _attrs), null, _parent));
   } else {
@@ -11496,11 +11496,11 @@ _sfc_main$8.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/@nuxt+ui@2.14.2_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/@nuxt/ui/dist/runtime/components/elements/Icon.vue");
   return _sfc_setup$8 ? _sfc_setup$8(props, ctx) : void 0;
 };
-const __nuxt_component_2$1 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["ssrRender", _sfc_ssrRender$6]]);
+const __nuxt_component_2 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["ssrRender", _sfc_ssrRender$6]]);
 const config$3 = mergeConfig(appConfig.ui.strategy, appConfig.ui.avatar, avatar);
 const _sfc_main$7 = defineComponent({
   components: {
-    UIcon: __nuxt_component_2$1
+    UIcon: __nuxt_component_2
   },
   inheritAttrs: false,
   props: {
@@ -11623,7 +11623,7 @@ const _sfc_main$7 = defineComponent({
   }
 });
 function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_UIcon = __nuxt_component_2$1;
+  const _component_UIcon = __nuxt_component_2;
   _push(`<span${ssrRenderAttrs(mergeProps({ class: _ctx.wrapperClass }, _attrs))}>`);
   if (_ctx.url && !_ctx.error) {
     _push(`<img${ssrRenderAttrs(mergeProps({
@@ -11860,7 +11860,7 @@ function defineNuxtLink(options) {
     }
   });
 }
-const __nuxt_component_0$2 = /* @__PURE__ */ defineNuxtLink(nuxtLinkDefaults);
+const __nuxt_component_0$3 = /* @__PURE__ */ defineNuxtLink(nuxtLinkDefaults);
 function applyTrailingSlashBehavior(to, trailingSlash) {
   const normalizeFn = trailingSlash === "append" ? withTrailingSlash : withoutTrailingSlash;
   const hasProtocolDifferentFromHttp = hasProtocol(to) && !to.startsWith("http");
@@ -12537,7 +12537,7 @@ const _sfc_main$6 = defineComponent({
   }
 });
 function _sfc_ssrRender$4(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_NuxtLink = __nuxt_component_0$2;
+  const _component_NuxtLink = __nuxt_component_0$3;
   if (!_ctx.to) {
     ssrRenderVNode(_push, createVNode(resolveDynamicComponent(_ctx.as), mergeProps({
       type: _ctx.type,
@@ -12596,7 +12596,7 @@ _sfc_main$6.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/@nuxt+ui@2.14.2_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/@nuxt/ui/dist/runtime/components/elements/Link.vue");
   return _sfc_setup$6 ? _sfc_setup$6(props, ctx) : void 0;
 };
-const __nuxt_component_0$1 = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["ssrRender", _sfc_ssrRender$4]]);
+const __nuxt_component_0$2 = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["ssrRender", _sfc_ssrRender$4]]);
 function useInjectButtonGroup({ ui: ui2, props }) {
   const instance = getCurrentInstance();
   let parent = instance.parent;
@@ -12630,8 +12630,8 @@ function useInjectButtonGroup({ ui: ui2, props }) {
 const config$2 = mergeConfig(appConfig.ui.strategy, appConfig.ui.button, button);
 const _sfc_main$5 = defineComponent({
   components: {
-    UIcon: __nuxt_component_2$1,
-    ULink: __nuxt_component_0$1
+    UIcon: __nuxt_component_2,
+    ULink: __nuxt_component_0$2
   },
   inheritAttrs: false,
   props: {
@@ -12793,8 +12793,8 @@ const _sfc_main$5 = defineComponent({
   }
 });
 function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_ULink = __nuxt_component_0$1;
-  const _component_UIcon = __nuxt_component_2$1;
+  const _component_ULink = __nuxt_component_0$2;
+  const _component_UIcon = __nuxt_component_2;
   _push(ssrRenderComponent(_component_ULink, mergeProps({
     type: _ctx.type,
     disabled: _ctx.disabled || _ctx.loading,
@@ -12879,13 +12879,13 @@ _sfc_main$5.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/@nuxt+ui@2.14.2_nuxt@3.11.0_vite@5.1.6_vue@3.4.21/node_modules/@nuxt/ui/dist/runtime/components/elements/Button.vue");
   return _sfc_setup$5 ? _sfc_setup$5(props, ctx) : void 0;
 };
-const __nuxt_component_2 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["ssrRender", _sfc_ssrRender$3]]);
+const __nuxt_component_0$1 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["ssrRender", _sfc_ssrRender$3]]);
 const config$1 = mergeConfig(appConfig.ui.strategy, appConfig.ui.notification, notification);
 const _sfc_main$4 = defineComponent({
   components: {
-    UIcon: __nuxt_component_2$1,
+    UIcon: __nuxt_component_2,
     UAvatar: __nuxt_component_1,
-    UButton: __nuxt_component_2
+    UButton: __nuxt_component_0$1
   },
   inheritAttrs: false,
   props: {
@@ -13007,9 +13007,9 @@ const _sfc_main$4 = defineComponent({
   }
 });
 function _sfc_ssrRender$2(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_UIcon = __nuxt_component_2$1;
+  const _component_UIcon = __nuxt_component_2;
   const _component_UAvatar = __nuxt_component_1;
-  const _component_UButton = __nuxt_component_2;
+  const _component_UButton = __nuxt_component_0$1;
   _push(`<template><div${ssrRenderAttrs(mergeProps({
     class: _ctx.wrapperClass,
     role: "status"
@@ -13204,9 +13204,9 @@ _sfc_main$3.setup = (props, ctx) => {
 const __nuxt_component_3 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$1]]);
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
-  const _component_NuxtLayout = __nuxt_component_0$4;
+  const _component_NuxtLayout = __nuxt_component_0$5;
   const _component_UContainer = __nuxt_component_1$1;
-  const _component_NuxtPage = __nuxt_component_2$2;
+  const _component_NuxtPage = __nuxt_component_2$1;
   const _component_UNotifications = __nuxt_component_3;
   _push(`<!--[-->`);
   _push(ssrRenderComponent(_component_NuxtLayout, null, {
@@ -13349,5 +13349,5 @@ let entry;
 }
 const entry$1 = (ssrContext) => entry(ssrContext);
 
-export { arrow as A, getNuxtLinkProps as B, useAppConfig as C, resolveIconName as D, br as E, Bn as F, __nuxt_component_0$1 as G, getULinkProps as H, useState as I, useRoute as J, _export_sfc as _, __nuxt_component_0$2 as a, appConfig as b, createError as c, __nuxt_component_2$1 as d, entry$1 as default, __nuxt_component_1 as e, useUI as f, defu as g, useInjectButtonGroup as h, twJoin as i, input as j, inputMenu as k, get as l, mergeConfig as m, useToast as n, navigateTo as o, __nuxt_component_2 as p, asyncDataDefaults as q, useNuxtApp as r, select as s, twMerge as t, useHead as u, hash as v, fetchDefaults as w, textarea as x, looseToNumber as y, button as z };
+export { arrow as A, getNuxtLinkProps as B, useAppConfig as C, resolveIconName as D, br as E, Bn as F, __nuxt_component_0$2 as G, getULinkProps as H, useState as I, useRoute as J, _export_sfc as _, __nuxt_component_0$3 as a, appConfig as b, createError as c, __nuxt_component_2 as d, entry$1 as default, __nuxt_component_1 as e, useUI as f, defu as g, useInjectButtonGroup as h, twJoin as i, input as j, inputMenu as k, get as l, mergeConfig as m, useToast as n, navigateTo as o, __nuxt_component_0$1 as p, asyncDataDefaults as q, useNuxtApp as r, select as s, twMerge as t, useHead as u, hash as v, fetchDefaults as w, textarea as x, looseToNumber as y, button as z };
 //# sourceMappingURL=server.mjs.map
