@@ -5123,7 +5123,7 @@ const cfg0 = defineAppConfig({
 });
 const inlineConfig = {
   "nuxt": {
-    "buildId": "7b7c5d67-ac58-46e0-b957-97cc74897078"
+    "buildId": "67b9db5e-e5b6-46ab-8e5a-29c05be497c1"
   },
   "ui": {
     "primary": "green",
@@ -5186,7 +5186,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-BDKE9DQ7.mjs').then((m) => m.default || m)
+    component: () => import('./index-wCgoGDoY.mjs').then((m) => m.default || m)
   },
   {
     name: "banners",
@@ -5194,7 +5194,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-BETnCjsr.mjs').then((m) => m.default || m)
+    component: () => import('./index-DnZgWOMl.mjs').then((m) => m.default || m)
   },
   {
     name: "books",
@@ -5202,7 +5202,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-D5xXsRfe.mjs').then((m) => m.default || m)
+    component: () => import('./index-uIB3wy48.mjs').then((m) => m.default || m)
   },
   {
     name: "categories",
@@ -5210,7 +5210,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-D7w2yOdB.mjs').then((m) => m.default || m)
+    component: () => import('./index-CXF6WRGW.mjs').then((m) => m.default || m)
   },
   {
     name: (__nuxt_page_meta$6 == null ? void 0 : __nuxt_page_meta$6.name) ?? "exit",
@@ -5234,7 +5234,7 @@ const _routes = [
     meta: __nuxt_page_meta$4 || {},
     alias: (__nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.alias) || [],
     redirect: __nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.redirect,
-    component: () => import('./index-B5Ad-8E5.mjs').then((m) => m.default || m)
+    component: () => import('./index-CUMd05jT.mjs').then((m) => m.default || m)
   },
   {
     name: "notifications",
@@ -5242,7 +5242,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-Stnx71Fp.mjs').then((m) => m.default || m)
+    component: () => import('./index-CnyvwPl2.mjs').then((m) => m.default || m)
   },
   {
     name: "profile",
@@ -5250,7 +5250,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-DvZIBxUx.mjs').then((m) => m.default || m)
+    component: () => import('./index-BK8HYlac.mjs').then((m) => m.default || m)
   },
   {
     name: "urls",
@@ -5258,7 +5258,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-tj16UILS.mjs').then((m) => m.default || m)
+    component: () => import('./index-CyjkseLU.mjs').then((m) => m.default || m)
   },
   {
     name: "users",
@@ -5266,7 +5266,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0 ,
-    component: () => import('./index-qnJrHWHz.mjs').then((m) => m.default || m)
+    component: () => import('./index-BYwR95Pc.mjs').then((m) => m.default || m)
   }
 ];
 const _wrapIf = (component, props, slots) => {
